@@ -17,17 +17,14 @@ import { Loader2 } from "lucide-react";
 
 export default function GeneratePost() {
   // Form state
-  const [tone, setTone] = useState("casual");
-  const [type, setType] = useState("story");
-  const [topic, setTopic] = useState("freelance journey");
-  const [goal, setGoal] = useState("get leads");
-  const [keywords, setKeywords] = useState("growth, time management");
-  const [persona, setPersona] = useState(
-    "Tamjid Mostafa — Web + Automation + AI Systems Builder"
-  );
-  const [audience, setAudience] = useState(
-    "founders and service providers who want to scale"
-  );
+  const [tone, setTone] = useState("");
+  const [type, setType] = useState("");
+  const [topic, setTopic] = useState("");
+  const [goal, setGoal] = useState("");
+  const [keywords, setKeywords] = useState("");
+  const [persona, setPersona] = useState("");
+  const [audience, setAudience] = useState("");
+  const [characters, setCharacters] = useState("");
 
   // Refs for scrolling and focusing
   const resultAreaRef = useRef<HTMLDivElement>(null);
@@ -46,11 +43,11 @@ export default function GeneratePost() {
         resultAreaRef.current.style.display = "block";
         resultAreaRef.current.scrollIntoView({ behavior: "smooth" });
       }
-      
+
       // Focus textarea and ensure cursor is at the end
       if (textareaRef.current) {
         textareaRef.current.focus();
-        
+
         // Set cursor to the end of text
         const textLength = textareaRef.current.value.length;
         textareaRef.current.setSelectionRange(textLength, textLength);
@@ -75,12 +72,16 @@ export default function GeneratePost() {
     
     Written like ${persona}.  
     Helping ${audience}.
+    Minimum ${characters} characters.
     `;
     await complete(prompt);
   };
 
   return (
-    <div ref={containerRef} className="max-w-3xl w-full mx-auto py-8 px-4 space-y-8">
+    <div
+      ref={containerRef}
+      className="max-w-3xl w-full mx-auto py-8 px-4 space-y-8"
+    >
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -172,7 +173,7 @@ export default function GeneratePost() {
                 id="persona"
                 value={persona}
                 onChange={(e) => setPersona(e.target.value)}
-                placeholder="e.g., John Doe — Marketing Specialist"
+                placeholder="e.g., John Doe - Marketing Specialist"
                 className="w-full"
               />
             </div>
@@ -188,6 +189,27 @@ export default function GeneratePost() {
                 placeholder="e.g., business owners looking to scale"
                 className="w-full"
               />
+            </div>
+
+            {/* Character Count Input */}
+            <div className="space-y-2 w-full">
+              <Label htmlFor="characters" className="font-medium">
+                Approximate Character Count
+              </Label>
+              <Select
+                value={String(characters)}
+                onValueChange={(value) => setCharacters(value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select approximate character count" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="600">Approx. 600 characters</SelectItem>
+                  <SelectItem value="900">Approx. 900 characters</SelectItem>
+                  <SelectItem value="1200">Approx. 1200 characters</SelectItem>
+                  <SelectItem value="1500">Approx. 1500 characters</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <Button type="submit" disabled={isLoading} className="w-full py-6">
@@ -211,19 +233,21 @@ export default function GeneratePost() {
           isLoading || completion ? "opacity-100" : "opacity-0 hidden"
         }`}
       >
-        <Card className={`w-full ${completion ? "border-2 border-primary" : ""}`}>
+        <Card
+          className={`w-full ${completion ? "border-2 border-primary" : ""}`}
+        >
           <CardHeader>
             <CardTitle className="text-xl font-bold">
               Your LinkedIn Post
             </CardTitle>
           </CardHeader>
           <CardContent className="w-full">
-            
             <Textarea
               ref={textareaRef}
-              value={completion || (isLoading ? "Generating..." : "")}
+              readOnly
+              value={completion}
               rows={12}
-              className="w-full font-medium text-base resize-none focus:ring-2 focus:ring-primary"
+              className="w-full font-medium text-base resize-y focus:ring-2 focus:ring-primary"
             />
             <div className="flex justify-end mt-4 w-full">
               <Button

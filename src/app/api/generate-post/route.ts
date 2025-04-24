@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   `;
 
   const result = streamText({
-    model: openai("gpt-3.5-turbo"),
+    model: openai("gpt-4o-mini"),
     system,
     prompt,
     maxTokens: 300,

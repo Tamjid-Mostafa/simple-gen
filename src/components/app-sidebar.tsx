@@ -1,105 +1,48 @@
 "use client";
 
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import {
-  Dumbbell,
-  User,
-  BarChart3,
-  FilePlus,
-  Settings2,
-  PieChart,
-  List,
-  Users,
-  ClipboardList,
-  CheckSquare,
+  ChevronLeft, Home, MessagesSquare,
 } from "lucide-react";
-
-const data = {
-  teams: [
-    {
-      name: "FitLife",
-      logo: Dumbbell,
-      plan: "Pro",
-    },
-  ],
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: BarChart3,
-      isActive: true,
-    },
-    {
-      title: "Workouts",
-      url: "/dashboard/workouts",
-      icon: Dumbbell,
-    },
-    {
-      title: "Nutrition",
-      url: "/dashboard/nutrition",
-      icon: PieChart,
-    },
-    {
-      title: "Progress",
-      url: "/dashboard/progress",
-      icon: ClipboardList,
-    },
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: Settings2,
-    },
-  ],
-  adminNav: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: BarChart3,
-      isActive: true,
-    },
-    {
-      title: "Manage Members",
-      url: "/dashboard/members",
-      icon: Users,
-    },
-    {
-      title: "Workout Plans",
-      url: "/dashboard/workout-plans",
-      icon: FilePlus,
-    },
-    {
-      title: "Nutrition Plans",
-      url: "/dashboard/nutrition-plans",
-      icon: List,
-    },
-    {
-      title: "Reports",
-      url: "/dashboard/reports",
-      icon: CheckSquare,
-    },
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: Settings2,
-    },
-  ],
-};
+import { SidebarBrand } from "./sidebar-brand";
+import { SidebarFooterUser } from "./sidebar-footer-user";
 
 
-export function AppSidebar({ role }: { role: "member" | "admin" }) {
-  const navItems = role === "admin" ? data.adminNav : data.navMain;
+const navItems = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: Home,
+  },
+  {
+    title: "Comment",
+    url: "/dashboard/comment",
+    icon: MessagesSquare
+  }
 
+];
+
+export function AppSidebar() {
+  const {toggleSidebar, isMobile} = useSidebar()
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar variant="sidebar" collapsible="icon">
       <SidebarHeader>
-        {/* <SidebarBrand /> */}
+        <SidebarBrand />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navItems} />
       </SidebarContent>
       <SidebarFooter>
-        {/* <SidebarFooterUser /> */}
+        <SidebarFooterUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

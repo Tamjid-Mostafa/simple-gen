@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight, Loader, Loader2, type LucideIcon } from "lucide-react";
 
 import {
   Collapsible,
@@ -17,6 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import Link, { useLinkStatus } from "next/link";
 
 export function NavMain({
   items,
@@ -32,6 +33,8 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const {pending} = useLinkStatus();
+  console.log(pending);
   return (
     <SidebarGroup>
       <SidebarGroupLabel></SidebarGroupLabel>
@@ -39,10 +42,11 @@ export function NavMain({
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild tooltip={item.title}>
-              <a href={item.url} className="flex items-center gap-2">
+              <Link href={item.url} className="flex items-center gap-2">
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
-              </a>
+                {pending && <Loader2 className="w-4 h-4 animate-spin absolute right-2" />}
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}

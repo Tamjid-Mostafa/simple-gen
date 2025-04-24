@@ -2,8 +2,6 @@
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
-import { SidebarBrand } from "./sidebar-brand";
-import { SidebarFooterUser } from "./sidebar-footer-user";
 import {
   Dumbbell,
   User,
@@ -95,13 +93,13 @@ export function AppSidebar({ role }: { role: "member" | "admin" }) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <SidebarBrand />
+        {/* <SidebarBrand /> */}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navItems} />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarFooterUser />
+        {/* <SidebarFooterUser /> */}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

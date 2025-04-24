@@ -218,6 +218,7 @@ export default function GeneratePost() {
             </CardTitle>
           </CardHeader>
           <CardContent className="w-full">
+            
             <Textarea
               ref={textareaRef}
               value={completion || (isLoading ? "Generating..." : "")}

@@ -85,7 +85,7 @@ export default function GeneratePost() {
   }, [copied]);
 
   // Form submission handler
-  const handleGenerate = async (e: React.FormEvent) => {
+  const handleGeneratePost = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Basic validation
@@ -165,7 +165,7 @@ export default function GeneratePost() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleGenerate} className="grid gap-6 w-full">
+          <form onSubmit={handleGeneratePost} className="grid gap-6 w-full">
             <div className="grid md:grid-cols-2 gap-4 w-full">
               {/* Tone Selection */}
               <div className="space-y-2 w-full">

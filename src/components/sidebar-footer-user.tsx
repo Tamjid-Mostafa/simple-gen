@@ -4,22 +4,24 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { UserButton } from "@clerk/nextjs";
-import { LogOut } from "lucide-react";
 
 export function SidebarFooterUser() {
+  const { toggleSidebar, isMobile, state } = useSidebar();
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
+      <SidebarMenuItem className="overflow-hidden border-t pt-2">
         <UserButton
           appearance={{
             elements: {
-              rootBox: "w-full bg-primary/20 rounded-md",
+              rootBox: "w-full",
               userButtonTrigger: "w-full justify-start",
-              userButtonBox: " text-sm py-2 px-2 rounded-md flex-row-reverse",
+              userButtonBox:
+                "text-sm py-2 px-[5px] rounded-md flex-row-reverse",
               avatarBox: "border-2 border-white rounded-full",
-              userButtonOuterIdentifier: "",
+              userButtonOuterIdentifier: `whitespace-nowrap `,
             },
           }}
           showName

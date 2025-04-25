@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 
 export function SidebarBrand() {
   const { toggleSidebar, isMobile, state } = useSidebar();
-  console.log(state);
   return (
     <SidebarMenu>
       <SidebarMenuItem

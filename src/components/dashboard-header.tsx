@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
+import { ModeToggle } from "./mode-toggle";
 
 const DashboardHeader = () => {
   const pathname = usePathname();
@@ -33,19 +34,23 @@ const DashboardHeader = () => {
                         {item}
                       </BreadcrumbPage>
                     ) : (
-                      <BreadcrumbLink href={`/${breadcrumb.slice(0, index + 1).join("/")}`} className="capitalize">
+                      <BreadcrumbLink
+                        href={`/${breadcrumb.slice(0, index + 1).join("/")}`}
+                        className="capitalize"
+                      >
                         {item}
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>
-                  {!isLastItem && (
-                    <BreadcrumbSeparator className="" />
-                  )}
+                  {!isLastItem && <BreadcrumbSeparator className="" />}
                 </Fragment>
               );
             })}
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
+      <div className="absolute right-2">
+        <ModeToggle />
       </div>
     </header>
   );

@@ -39,7 +39,7 @@ const DashboardHeader = () => {
                     )}
                   </BreadcrumbItem>
                   {!isLastItem && (
-                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbSeparator className="" />
                   )}
                 </Fragment>
               );

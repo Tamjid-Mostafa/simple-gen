@@ -15,6 +15,13 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, CheckCircle, Copy } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+import { ToneSelect } from "./ToneSelect";
 
 // Define form data type to avoid TypeScript errors
 type FormField =
@@ -159,13 +166,16 @@ export default function GeneratePost() {
       className="max-w-3xl w-full mx-auto py-8 px-4 space-y-8"
     >
       <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
+        <CardHeader className="pb-4 border-b">
+          <CardTitle className="text-2xl font-bold">
             LinkedIn Post Generator
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleGeneratePost} className="grid gap-6 w-full">
+          <form
+            onSubmit={handleGeneratePost}
+            className="pt-6 grid gap-6 w-full"
+          >
             <div className="grid md:grid-cols-2 gap-4 w-full">
               {/* Tone Selection */}
               <div className="space-y-2 w-full">
@@ -173,9 +183,9 @@ export default function GeneratePost() {
                   Tone<span className="text-red-500">*</span>
                 </Label>
                 <Select
-                  value={formData.tone}
-                  onValueChange={(value) => handleChange("tone", value)}
-                >
+                value={formData.tone}
+                onValueChange={(value) => handleChange("tone", value)}
+              >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select tone" />
                   </SelectTrigger>
@@ -225,102 +235,124 @@ export default function GeneratePost() {
                 className="w-full"
               />
             </div>
+            {/* Post Generation Settings */}
+            <Accordion type="single" collapsible defaultValue="settings">
+              <AccordionItem value="settings">
+                <AccordionTrigger className="text-lg font-semibold">
+                  Post Settings
+                </AccordionTrigger>
+                <AccordionContent className="px-4">
+                  <div className="space-y-5 pt-2">
+                    {/* Goal Input */}
+                    <div className="space-y-2 w-full">
+                      <Label htmlFor="goal" className="font-medium">
+                        Goal
+                      </Label>
+                      <Input
+                        id="goal"
+                        value={formData.goal}
+                        onChange={(e) => handleChange("goal", e.target.value)}
+                        placeholder="e.g., get leads, share knowledge"
+                        className="w-full"
+                      />
+                    </div>
 
-            {/* Goal Input */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="goal" className="font-medium">
-                Goal
-              </Label>
-              <Input
-                id="goal"
-                value={formData.goal}
-                onChange={(e) => handleChange("goal", e.target.value)}
-                placeholder="e.g., get leads, share knowledge"
-                className="w-full"
-              />
-            </div>
+                    {/* Keywords Input */}
+                    <div className="space-y-2 w-full">
+                      <Label htmlFor="keywords" className="font-medium">
+                        Keywords
+                      </Label>
+                      <Input
+                        id="keywords"
+                        value={formData.keywords}
+                        onChange={(e) =>
+                          handleChange("keywords", e.target.value)
+                        }
+                        placeholder="e.g., growth, time management, scaling"
+                        className="w-full"
+                      />
+                    </div>
 
-            {/* Keywords Input */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="keywords" className="font-medium">
-                Keywords
-              </Label>
-              <Input
-                id="keywords"
-                value={formData.keywords}
-                onChange={(e) => handleChange("keywords", e.target.value)}
-                placeholder="e.g., growth, time management, scaling"
-                className="w-full"
-              />
-            </div>
+                    {/* Persona Input */}
+                    <div className="space-y-2 w-full">
+                      <Label htmlFor="persona" className="font-medium">
+                        Your Persona
+                      </Label>
+                      <Input
+                        id="persona"
+                        value={formData.persona}
+                        onChange={(e) =>
+                          handleChange("persona", e.target.value)
+                        }
+                        placeholder="e.g., John Doe - Marketing Specialist"
+                        className="w-full"
+                      />
+                    </div>
 
-            {/* Persona Input */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="persona" className="font-medium">
-                Your Persona
-              </Label>
-              <Input
-                id="persona"
-                value={formData.persona}
-                onChange={(e) => handleChange("persona", e.target.value)}
-                placeholder="e.g., John Doe - Marketing Specialist"
-                className="w-full"
-              />
-            </div>
+                    {/* Audience Input */}
+                    <div className="space-y-2 w-full">
+                      <Label htmlFor="audience" className="font-medium">
+                        Target Audience
+                      </Label>
+                      <Input
+                        id="audience"
+                        value={formData.audience}
+                        onChange={(e) =>
+                          handleChange("audience", e.target.value)
+                        }
+                        placeholder="e.g., business owners looking to scale"
+                        className="w-full"
+                      />
+                    </div>
 
-            {/* Audience Input */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="audience" className="font-medium">
-                Target Audience
-              </Label>
-              <Input
-                id="audience"
-                value={formData.audience}
-                onChange={(e) => handleChange("audience", e.target.value)}
-                placeholder="e.g., business owners looking to scale"
-                className="w-full"
-              />
-            </div>
+                    {/* Character Count Selection */}
+                    <div className="space-y-2 w-full">
+                      <Label htmlFor="characters" className="font-medium">
+                        Approximate Character Count
+                      </Label>
+                      <Select
+                        value={formData.characters}
+                        onValueChange={(value) =>
+                          handleChange("characters", value)
+                        }
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select approximate character count" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {characterOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-            {/* Character Count Selection */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="characters" className="font-medium">
-                Approximate Character Count
-              </Label>
-              <Select
-                value={formData.characters}
-                onValueChange={(value) => handleChange("characters", value)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select approximate character count" />
-                </SelectTrigger>
-                <SelectContent>
-                  {characterOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Custom Ending/CTA Textarea */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="customEnding" className="font-medium">
-                Custom Ending/CTA
-              </Label>
-              <Textarea
-                id="customEnding"
-                value={formData.customEnding}
-                onChange={(e) => handleChange("customEnding", e.target.value)}
-                placeholder="e.g., Check out my new course at example.com/course or 'DM me for a free consultation'"
-                className="w-full h-24"
-              />
-              <p className="text-xs text-gray-500">
-                Add any links, CTAs, or custom text you want to appear at the
-                end of your post before hashtags.
-              </p>
-            </div>
+                    {/* Custom Ending/CTA Textarea */}
+                    <div className="space-y-2 w-full">
+                      <Label htmlFor="customEnding" className="font-medium">
+                        Custom Ending/CTA
+                      </Label>
+                      <Textarea
+                        id="customEnding"
+                        value={formData.customEnding}
+                        onChange={(e) =>
+                          handleChange("customEnding", e.target.value)
+                        }
+                        placeholder="e.g., Check out my new course at example.com/course or 'DM me for a free consultation'"
+                        rows={10}
+                        className="w-full resize-none"
+                      />
+                      <p className="text-xs text-gray-500">
+                        Add any links, CTAs, or custom text you want to appear
+                        at the end of your post before hashtags.
+                      </p>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
 
             {/* Submit Button */}
             <Button type="submit" disabled={isLoading} className="w-full py-6">

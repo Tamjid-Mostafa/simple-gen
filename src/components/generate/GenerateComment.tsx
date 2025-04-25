@@ -208,7 +208,7 @@ export default function GenerateComment() {
         </CardHeader>
         
         <form onSubmit={handleGenerateComment}>
-          <CardContent className="pt-6 space-y-6 px0">
+          <CardContent className="pt-6 space-y-6">
             {/* LinkedIn Post URL Input */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">

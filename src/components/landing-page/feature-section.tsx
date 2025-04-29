@@ -8,12 +8,12 @@ export function FeatureSection() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex lg:flex-row flex-col-reverse gap-8 items-center">
           <div className="flex justify-center">
-            <div className="relative w-full max-w-2xl aspect-[4/3] rounded-lg overflow-hidden border shadow-lg">
+            <div className="relative w-full max-w-2xl aspect-[4/3] rounded-lg  border shadow-lg">
               <Image
                 src="/placeholder.svg?height=400&width=500"
                 alt="SimpleGen interface"
-                width={1000}
-                height={1000}
+                width={400}
+                height={500}
                 className="object-cover"
               />
             </div>

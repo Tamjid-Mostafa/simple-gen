@@ -16,7 +16,7 @@ export function Hero({
     }} className="py-12 md:py-16">
       <div className="container mx-auto">
         <div className="flex flex-col items-center text-center space-y-4">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter">
             The <span className="text-teal-500">LinkedIn</span> Post <br />{" "}
             Generator That <br /> Works
           </h1>

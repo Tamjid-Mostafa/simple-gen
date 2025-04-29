@@ -27,18 +27,13 @@ export function ShowcaseVideo() {
     [0, 0.3],
     [0.96, isMobile ? 1 : 1.1]
   );
-  const rotate = useTransform(scrollYProgress, [0, 0.12], [20, 0]);
-  const translate = useTransform(
-    scrollYProgress,
-    [0, 0.8],
-    [0, 400]
-  );
+  const rotate = useTransform(scrollYProgress, [0, 0.3], [20, 0]);
+  const translate = useTransform(scrollYProgress, [0, 0.3], [0, -100]);
+  const textTransform = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   return (
-    <div
-      ref={ref}
-      className="pb-0 md:pb-[28rem] md:pt-40 flex flex-col justify-center items-center min-h-[100dvh]"
-    >
-      <Hero />
+    <div ref={ref} className="py-10 flex flex-col justify-center items-center ">
+      <Hero textTransform={textTransform} textOpacity={textOpacity} />
       <div className="[perspective:800px] md:px-40 px-12 w-full flex justify-center items-center">
         <motion.div
           style={{

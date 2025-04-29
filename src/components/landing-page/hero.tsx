@@ -1,9 +1,19 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { MotionValue,motion } from "motion/react";
 
-export function Hero() {
+export function Hero({
+  textTransform,
+  textOpacity,
+}: {
+  textTransform?: MotionValue<number>;
+  textOpacity?: MotionValue<number>;
+}) {
   return (
-    <section className="py-12 md:py-16">
+    <motion.section style={{
+      translateY: textTransform,
+      opacity: textOpacity,
+    }} className="py-12 md:py-16">
       <div className="container mx-auto">
         <div className="flex flex-col items-center text-center space-y-4">
           <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter">
@@ -55,6 +65,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

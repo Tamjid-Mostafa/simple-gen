@@ -45,19 +45,12 @@ export default function GeneratePost() {
     tone: "storytelling",
     type: "mistake",
     topic: "freelancing",
-    goal: "share knowledge",
-    keywords: "time management",
-    persona: "Tamjid - Freelance Web Developer",
-    audience: "business owners looking to scale",
+    goal: "",
+    keywords: "",
+    persona: "",
+    audience: "",
     characters: "600",
-    customEnding: `
-    1️⃣ Scroll to the top
-    2️⃣ Visit: devtamjid.com
-    3️⃣ DM me “GROWTH WEBSITE” and let’s turn your site into a conversion machine 💬
-    
-    P.S.
-    What’s one feature your website is missing that you wish it had? Drop your thoughts below! 👇
-    `, // New field for custom ending/CTA
+    customEnding: ``,
   });
 
   // Copy status state

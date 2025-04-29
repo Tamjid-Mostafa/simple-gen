@@ -1,116 +1,96 @@
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { Navbar } from "@/components/landing-page/navbar";
+import { Hero } from "@/components/landing-page/hero";
+import { FeatureSection } from "@/components/landing-page/feature-section";
+import { ProofSection } from "@/components/landing-page/proof-section";
+import { Footer } from "@/components/landing-page/footer";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ShowcaseVideo } from "@/components/landing-page/showcase-video";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="relative">
-        <div className="absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48"
-            alt="Fitness background"
-            fill
-            className="object-cover brightness-50"
-            priority
-          />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
-              Transform Your Life Through Fitness
-            </h1>
-            <p className="mt-6 max-w-xl text-xl text-gray-300">
-              Track your workouts, monitor your progress, and achieve your fitness goals
-              with our comprehensive platform.
-            </p>
-            <div className="mt-10 flex gap-4">
-              <Button size="lg" asChild>
-                <Link href="/workouts">Get Started</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/about">Learn More</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="flex-1">
+      {/* <Hero /> */}
+      <ShowcaseVideo/>
+      <FeatureSection />
+      <ProofSection />
 
-      {/* Features Section */}
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 md:grid-cols-3">
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-4 rounded-full bg-primary/10 p-4">
-                <svg
-                  className="h-6 w-6 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
-              </div>
-              <h3 className="mb-2 text-xl font-semibold">Track Progress</h3>
-              <p className="text-muted-foreground">
-                Monitor your fitness journey with detailed analytics and progress tracking.
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-4 rounded-full bg-primary/10 p-4">
-                <svg
-                  className="h-6 w-6 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="mb-2 text-xl font-semibold">Workout Plans</h3>
-              <p className="text-muted-foreground">
-                Access personalized workout plans tailored to your fitness goals.
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-4 rounded-full bg-primary/10 p-4">
-                <svg
-                  className="h-6 w-6 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
-                  />
-                </svg>
-              </div>
-              <h3 className="mb-2 text-xl font-semibold">Nutrition Tracking</h3>
-              <p className="text-muted-foreground">
-                Log your meals and track your nutritional intake with our easy-to-use tools.
-              </p>
-            </div>
+      <section className="py-16 px-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl font-bold mb-2">FAQ's</h1>
+            <p className="text-lg text-slate-600">
+              Top questions about SimpleGen
+            </p>
           </div>
+
+          <Accordion type="single" collapsible className="space-y-4">
+            <AccordionItem value="item-1" className="border-b border-slate-200">
+              <AccordionTrigger className="text-left py-5 font-medium">
+                What is the difference between ChatGPT and SimpleGen?
+              </AccordionTrigger>
+              <AccordionContent className="pb-5 text-slate-600">
+                While ChatGPT is a general-purpose AI assistant, SimpleGen
+                is specifically designed for creating engaging social media
+                content. Our platform is optimized for generating
+                high-performing posts with features tailored to content creators
+                and marketers.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-2" className="border-b border-slate-200">
+              <AccordionTrigger className="text-left py-5 font-medium">
+                How often should I post on LinkedIn to see results?
+              </AccordionTrigger>
+              <AccordionContent className="pb-5 text-slate-600">
+                For optimal results, we recommend posting 3-5 times per week on
+                LinkedIn. Consistency is key, and our platform helps you
+                maintain a regular posting schedule without sacrificing quality.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-3" className="border-b border-slate-200">
+              <AccordionTrigger className="text-left py-5 font-medium">
+                What is the best timing to post on LinkedIn?
+              </AccordionTrigger>
+              <AccordionContent className="pb-5 text-slate-600">
+                The best times to post on LinkedIn are typically Tuesday through
+                Thursday between 8am-10am and 1pm-2pm. However, this can vary
+                based on your specific audience. Our analytics feature helps you
+                determine the optimal posting times for your network.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-4" className="border-b border-slate-200">
+              <AccordionTrigger className="text-left py-5 font-medium">
+                Should I pay for LinkedIn Premium?
+              </AccordionTrigger>
+              <AccordionContent className="pb-5 text-slate-600">
+                LinkedIn Premium can be beneficial if you're actively job
+                searching or need advanced networking features. However, for
+                content creation and engagement, our platform provides all the
+                tools you need without requiring a LinkedIn Premium
+                subscription.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-5" className="border-b border-slate-200">
+              <AccordionTrigger className="text-left py-5 font-medium">
+                How is SimpleGen better than a ghostwriter?
+              </AccordionTrigger>
+              <AccordionContent className="pb-5 text-slate-600">
+                SimpleGen offers several advantages over traditional
+                ghostwriters: it's available 24/7, costs significantly less, can
+                generate content in seconds rather than days, and learns from
+                your style over time. Plus, you maintain complete control over
+                editing and publishing.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
     </div>

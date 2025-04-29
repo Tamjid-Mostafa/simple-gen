@@ -1,5 +1,5 @@
-import { Footer } from "@/components/footer";
-import { Navigation } from "@/components/navigation";
+import { Footer } from "@/components/landing-page/footer";
+import { Navbar } from "@/components/landing-page/navbar";
 import React from "react";
 
 type Props = {
@@ -8,11 +8,11 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   return (
-    <main className="flex min-h-screen flex-col">
-      <Navigation />
-      <div className="flex-1">{children}</div>
-      <Footer />
-    </main>
+    <div className="min-h-screen flex flex-col">
+    <Navbar />
+    {children}
+    <Footer />
+  </div>
   );
 };
 

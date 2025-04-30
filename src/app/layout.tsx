@@ -7,7 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NextJS App",
+  title: "SimpleGen - Your Best LinkedIn Post Generator Assistant",
   description:
     "A NextJS app with Clerk authentication and Tailwind CSS",
 };

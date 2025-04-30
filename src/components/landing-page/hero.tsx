@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { MotionValue,motion } from "motion/react";
+import { MotionValue, motion } from "motion/react";
 
 export function Hero({
   textTransform,
@@ -9,11 +9,37 @@ export function Hero({
   textTransform?: MotionValue<number>;
   textOpacity?: MotionValue<number>;
 }) {
+  const userData = [
+    {
+      name: "Caterina",
+      img: "/user/cate.png",
+    },
+    {
+      name: "Bayezid Mostafa",
+      img: "/user/bayezid.png",
+    },
+    {
+      name: "Nafiul Islam",
+      img: "/user/santo.png",
+    },
+    {
+      name: "Aong Chinghla",
+      img: "/user/aong.png",
+    },
+    {
+      name: "Camron",
+      img: "/user/camron.png",
+    },
+  ];
+
   return (
-    <motion.section style={{
-      translateY: textTransform,
-      opacity: textOpacity,
-    }} className="py-12 md:py-16">
+    <motion.section
+      style={{
+        translateY: textTransform,
+        opacity: textOpacity,
+      }}
+      className="py-12 md:py-16"
+    >
       <div className="container mx-auto">
         <div className="flex flex-col items-center text-center space-y-4">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter">
@@ -30,14 +56,14 @@ export function Hero({
 
           <div className="flex items-center mt-6">
             <div className="flex -space-x-2">
-              {[1, 2, 3, 4, 5].map((i) => (
+              {userData.map((u, i) => (
                 <div
                   key={i}
                   className="w-8 h-8 rounded-full border-2 border-white overflow-hidden"
                 >
                   <Image
-                    src={`/placeholder.svg?height=32&width=32`}
-                    alt={`User ${i}`}
+                    src={u?.img}
+                    alt={u?.name}
                     width={32}
                     height={32}
                     className="bg-gray-200"

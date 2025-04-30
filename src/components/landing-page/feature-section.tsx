@@ -1,26 +1,34 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { MacbookScroll } from "../ui/macbook-scroll";
 
 export function FeatureSection() {
   return (
     <section className="py-12 md:py-16">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex lg:flex-row flex-col-reverse gap-8 items-center">
+        <div className="flex lg:flex-row flex-col-reverse gap-8 items-center justify-center">
           <div className="flex justify-center">
-            <div className="relative w-full max-w-2xl aspect-[4/3] rounded-lg  border shadow-lg">
-              <Image
-                src="/placeholder.svg?height=400&width=500"
-                alt="SimpleGen interface"
-                width={400}
-                height={500}
-                className="object-cover"
-              />
+            <div className="relative w-full max-w-2xl aspect-video shadow-lg overflow-hidden">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full"
+              >
+                <source
+                  src="https://cdn.prod.website-files.com/65c3a67cde56d79febb2fb8c%2F66f2f2ea593903215d3b1cd5_Scrollcapture%202024-09-24%20At%20130259-transcode.mp4"
+                  type="video/mp4"
+                />
+                <source
+                  src="https://cdn.prod.website-files.com/65c3a67cde56d79febb2fb8c%2F66f2f2ea593903215d3b1cd5_Scrollcapture%202024-09-24%20At%20130259-transcode.webm"
+                  type="video/webm"
+                />
+                Your browser does not support the video tag.
+              </video>
             </div>
           </div>
           <div className="space-y-4 max-w-sm">
             <h2 className="text-5xl md:text-3xl font-bold">
-              Start generating for <br />{" "}
+              Start generating for <br />
               <span className="text-teal-500">free</span> with SimpleGen.
             </h2>
             <p className="text-muted-foreground">

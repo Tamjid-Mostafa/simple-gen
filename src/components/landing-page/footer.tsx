@@ -14,7 +14,7 @@ export function Footer() {
         </div>
 
         <div className="flex gap-6">
-          <Link href="/login" className="text-sm hover:underline">
+          <Link href="/signin" className="text-sm hover:underline">
             Login
           </Link>
           <Link href="/try-SimpleGen" className="text-sm hover:underline">

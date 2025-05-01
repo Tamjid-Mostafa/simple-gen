@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Star, StarHalf } from "lucide-react";
+import Link from "next/link";
 
 // Single array of reviews with all types
 const reviews = [
@@ -676,7 +677,7 @@ const ReviewCard = ({
                   "linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%)",
               }}
               animate={{
-                left: ["-100%", "100%", ],
+                left: ["-100%", "100%"],
               }}
               transition={{
                 duration: 1.5,
@@ -761,7 +762,7 @@ export function ProofSection() {
               },
             }}
           >
-            We're grateful for our LinkedBoost community.
+            We're grateful for our SimpleGen community.
           </motion.p>
 
           <motion.div
@@ -775,9 +776,11 @@ export function ProofSection() {
               },
             }}
           >
-            <Button className="bg-teal-500 hover:bg-teal-600 mt-4">
-              Try LinkedBoost Today
-            </Button>
+            <Link href="/dashboard">
+              <Button className="bg-teal-500 hover:bg-teal-600 mt-4">
+                Try SimpleGen Today
+              </Button>
+            </Link>
           </motion.div>
         </motion.div>
 

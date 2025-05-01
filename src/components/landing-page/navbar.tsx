@@ -82,7 +82,6 @@ export function Navbar() {
               Try SimpleGen
             </Button>
           </Link>
-          <ModeToggle />
         </nav>
 
         <div className="flex items-center gap-4 md:hidden">
@@ -128,7 +127,7 @@ export function Navbar() {
                 <Link href="/subscribe" onClick={() => setOpen(false)}>
                   Subscribe
                 </Link>
-                <Link href="/dashboard" onClick={() => setOpen(false)}>
+                <Link href="/sign-in" onClick={() => setOpen(false)}>
                   Login
                 </Link>
                 <Link href="/dashboard">

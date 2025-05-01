@@ -5,6 +5,7 @@ import { motion, useInView, useAnimation } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Star, StarHalf } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import Link from "next/link";
 
 // Import reviews from the provided file
 const reviews = [
@@ -689,7 +690,7 @@ export function ProofSection() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            We're grateful for our LinkedBoost community.
+            We're grateful for our SimpleGen community.
           </motion.p>
 
           <motion.div
@@ -697,9 +698,11 @@ export function ProofSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <Button className="bg-teal-500 hover:bg-teal-600 mt-4">
-              Try LinkedBoost Today
-            </Button>
+            <Link href="/dashboard">
+              <Button className="bg-teal-500 hover:bg-teal-600 mt-4">
+                Try SimpleGen Today
+              </Button>
+            </Link>
           </motion.div>
         </motion.div>
 

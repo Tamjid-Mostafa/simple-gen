@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MotionValue, motion } from "motion/react";
+import Link from "next/link";
 
 export function Hero({
   textTransform,
@@ -50,9 +51,11 @@ export function Hero({
             After reaching 50 million views with it, Creative Studio made
             SimpleGen public — the AI to write posts for LinkedIn.
           </p>
-          <Button className="bg-teal-500 hover:bg-teal-600">
-            Try SimpleGen Today
-          </Button>
+          <Link href="/dashboard">
+            <Button className="bg-teal-500 hover:bg-teal-600">
+              Try SimpleGen Today
+            </Button>
+          </Link>
 
           <div className="flex items-center mt-6">
             <div className="flex -space-x-2">

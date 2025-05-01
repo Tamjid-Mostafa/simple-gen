@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function FeatureSection() {
   return (
@@ -7,13 +8,7 @@ export function FeatureSection() {
         <div className="flex lg:flex-row flex-col-reverse gap-8 items-center justify-center">
           <div className="flex justify-center">
             <div className="relative w-full max-w-2xl aspect-video shadow-lg overflow-hidden">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full"
-              >
+              <video autoPlay loop muted playsInline className="w-full h-full">
                 <source
                   src="https://cdn.prod.website-files.com/65c3a67cde56d79febb2fb8c%2F66f2f2ea593903215d3b1cd5_Scrollcapture%202024-09-24%20At%20130259-transcode.mp4"
                   type="video/mp4"
@@ -36,9 +31,11 @@ export function FeatureSection() {
               features for just $19.99/month — less than a cup of coffee to
               power your daily LinkedIn posts.
             </p>
-            <Button className="bg-teal-500 hover:bg-teal-600">
-              Try SimpleGen Today
-            </Button>
+            <Link href="/dashboard">
+              <Button className="bg-teal-500 hover:bg-teal-600">
+                Try SimpleGen Today
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

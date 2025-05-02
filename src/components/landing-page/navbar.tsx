@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { ModeToggle } from "../mode-toggle";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -58,7 +59,7 @@ export function Navbar() {
           </div>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-4">
           <Link href="/blog" className="text-sm font-medium">
             <span className="inline-block">Blog</span>
           </Link>
@@ -79,6 +80,7 @@ export function Navbar() {
               Try SimpleGen
             </Button>
           </Link>
+          <ModeToggle />
         </nav>
 
         <div className="flex items-center gap-4 md:hidden">
@@ -132,6 +134,7 @@ export function Navbar() {
                     Try SimpleGen
                   </Button>
                 </Link>
+                <ModeToggle />
               </motion.div>
             </motion.div>
           )}

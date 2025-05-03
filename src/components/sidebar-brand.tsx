@@ -14,7 +14,7 @@ export function SidebarBrand() {
     <SidebarMenu>
       <SidebarMenuItem
         className={cn("flex items-center gap-2 transition-all duration-300", {
-          "px-2 pt-4": state !== "collapsed",
+          "px-2": state !== "collapsed",
         })}
       >
         <Link href="/">

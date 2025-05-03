@@ -6,12 +6,16 @@ import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModeToggle } from "../mode-toggle";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [showNav, setShowNav] = useState(true);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
+  const { user, isLoaded } = useUser();
+
+  console.log(user);
 
   // Lock body scroll when menu open
   useEffect(() => {
@@ -69,9 +73,27 @@ export function Navbar() {
           <Link href="/subscribe" className="text-sm font-medium">
             <span className="inline-block">Subscribe</span>
           </Link>
-          <Link href="/sign-in" className="text-sm font-medium">
-            <span className="inline-block">Login</span>
-          </Link>
+          {!isLoaded ? (
+            <>
+              <div className="text-sm font-medium animate-pulse">
+                <span className="inline-block">Loading</span>
+              </div>
+            </>
+          ) : (
+            <>
+              {!user ? (
+                <Link href="/sign-in" className="text-sm font-medium">
+                  <span className="inline-block">Login</span>
+                </Link>
+              ) : (
+                <SignOutButton>
+                  <div className="text-sm font-medium cursor-pointer">
+                    <span className="inline-block">Logout</span>
+                  </div>
+                </SignOutButton>
+              )}
+            </>
+          )}
           <Link href="/dashboard">
             <Button
               size="sm"
@@ -123,9 +145,33 @@ export function Navbar() {
                 <Link href="/subscribe" onClick={() => setOpen(false)}>
                   Subscribe
                 </Link>
-                <Link href="/sign-in" onClick={() => setOpen(false)}>
-                  Login
-                </Link>
+                {!isLoaded ? (
+                  <>
+                    <div
+                      onClick={() => setOpen(false)}
+                      className="animate-pulse"
+                    >
+                      Loading
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {!user ? (
+                      <Link href="/sign-in" onClick={() => setOpen(false)}>
+                        Login
+                      </Link>
+                    ) : (
+                      <SignOutButton>
+                        <span
+                          onClick={() => setOpen(false)}
+                          className="cursor-pointer"
+                        >
+                          Logout
+                        </span>
+                      </SignOutButton>
+                    )}
+                  </>
+                )}
                 <Link href="/dashboard">
                   <Button
                     size="lg"

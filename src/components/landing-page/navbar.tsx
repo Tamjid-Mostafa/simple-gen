@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SignOutButton, useUser } from "@clerk/nextjs";
@@ -62,45 +63,26 @@ export function Navbar() {
           </div>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-4">
           <Link href="/blog" className="text-sm font-medium">
             <span className="inline-block">Blog</span>
           </Link>
           <Link href="/tools" className="text-sm font-medium">
             <span className="inline-block">Tools</span>
+            <span className="inline-block">Tools</span>
           </Link>
           <Link href="/subscribe" className="text-sm font-medium">
             <span className="inline-block">Subscribe</span>
           </Link>
-          {!isLoaded ? (
-            <>
-              <div className="text-sm font-medium animate-pulse">
-                <span className="inline-block">Loading</span>
-              </div>
-            </>
-          ) : (
-            <>
-              {!user ? (
-                <Link href="/sign-in" className="text-sm font-medium">
-                  <span className="inline-block">Login</span>
-                </Link>
-              ) : (
-                <SignOutButton>
-                  <div className="text-sm font-medium cursor-pointer">
-                    <span className="inline-block">Logout</span>
-                  </div>
-                </SignOutButton>
-              )}
-            </>
-          )}
-          <Link href="/dashboard">
-            <Button
-              size="sm"
-              className="bg-teal-500 hover:bg-teal-600 border-2 border-primary"
-            >
-              Try SimpleGen
-            </Button>
+                                     <Link href="/login" className="text-sm font-medium">
+            Login
           </Link>
+          <Button
+            size="sm"
+            className="bg-teal-500 hover:bg-teal-600 border-2 border-primary"
+          >
+            Try SimpleGen
+          </Button>
         </nav>
 
         <div className="flex items-center gap-4 md:hidden">

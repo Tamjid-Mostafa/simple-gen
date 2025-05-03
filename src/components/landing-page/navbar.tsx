@@ -73,9 +73,27 @@ export function Navbar() {
           <Link href="/subscribe" className="text-sm font-medium">
             <span className="inline-block">Subscribe</span>
           </Link>
-          <Link href="/sign-in" className="text-sm font-medium">
-            <span className="inline-block">Login</span>
-          </Link>
+          {!isLoaded ? (
+            <>
+              <div className="text-sm font-medium animate-pulse">
+                <span className="inline-block">Loading</span>
+              </div>
+            </>
+          ) : (
+            <>
+              {!user ? (
+                <Link href="/sign-in" className="text-sm font-medium">
+                  <span className="inline-block">Login</span>
+                </Link>
+              ) : (
+                <SignOutButton>
+                  <div className="text-sm font-medium cursor-pointer">
+                    <span className="inline-block">Logout</span>
+                  </div>
+                </SignOutButton>
+              )}
+            </>
+          )}
           <Link href="/dashboard">
             <Button
               size="sm"
@@ -126,9 +144,33 @@ export function Navbar() {
                 <Link href="/subscribe" onClick={() => setOpen(false)}>
                   Subscribe
                 </Link>
-                <Link href="/sign-in" onClick={() => setOpen(false)}>
-                  Login
-                </Link>
+                {!isLoaded ? (
+                  <>
+                    <div
+                      onClick={() => setOpen(false)}
+                      className="animate-pulse"
+                    >
+                      Loading
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {!user ? (
+                      <Link href="/sign-in" onClick={() => setOpen(false)}>
+                        Login
+                      </Link>
+                    ) : (
+                      <SignOutButton>
+                        <span
+                          onClick={() => setOpen(false)}
+                          className="cursor-pointer"
+                        >
+                          Logout
+                        </span>
+                      </SignOutButton>
+                    )}
+                  </>
+                )}
                 <Link href="/dashboard">
                   <Button
                     size="lg"

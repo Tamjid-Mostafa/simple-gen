@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     system,
     prompt,
     maxTokens: 100,
-    temperature: 0.9
+    temperature: 0.8
   });
 
   return result.toDataStreamResponse();

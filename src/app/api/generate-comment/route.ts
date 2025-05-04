@@ -13,9 +13,10 @@ export async function POST(req: NextRequest) {
   - Avoid starting with **exclamatory phrases** or excessive punctuation.
   - Keep the tone **human, raw, and authentic**.
   - No **em dashes** (—) or any other long dashes.
-  - **Use plain text only**—no markdown, bold, or HTML.
+  - **Use plain text only**—no markdown, bold, or HTML. And Format the comment with proper spacing and line breaks.
   
   ✅ **Tone:**
+  - Write like the biggest creators on LinkedIn : Lara Acosta, Jesmine ALice, Justin Welsh, Rubens.
   - Human
   - Honest & raw
   - Avoid **buzzwords**, **fluff**, or **GPT-like filler**
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest) {
     system,
     prompt,
     maxTokens: 100,
-    temperature: 0.8
+    temperature: 0.9
   });
 
   return result.toDataStreamResponse();

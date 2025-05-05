@@ -20,13 +20,16 @@ export function LinkedInPostCard({
       publishedAt: string;
       content: string;
       imageUrl: string | null;
+      videoUrl: string | null;
     };
   };
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+
   const content = post.post.content || "No content available";
   const showMore = content.length > 200;
-
+  console.log(post);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -64,10 +67,11 @@ export function LinkedInPostCard({
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className={cn(
-              "text-sm text-gray-800 whitespace-pre-wrap overflow-hidden", {
+              "text-sm text-gray-800 whitespace-pre-wrap overflow-hidden",
+              {
                 "line-clamp-3": !expanded && showMore,
                 "line-clamp-none": expanded,
-            }
+              }
             )}
           >
             {expanded || !showMore
@@ -89,12 +93,46 @@ export function LinkedInPostCard({
       </div>
 
       {/* Post media */}
-      {post.post.imageUrl && (
+      {/* Post media (click to play video) */}
+      {post.post.videoUrl ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="relative w-full"
+          className="relative w-full max-h-[450px] overflow-hidden"
+        >
+          {showVideo ? (
+            <video
+              src={post.post.videoUrl}
+              controls
+              autoPlay
+              playsInline
+              className="w-full max-h-[450px] object-cover"
+            />
+          ) : (
+            <div className="relative w-full">
+              <Image
+                src={post.post.imageUrl || "/default-thumbnail.jpg"}
+                alt="Post preview"
+                width={800}
+                height={450}
+                className="w-full max-h-[450px] object-cover"
+              />
+              <button
+                className="absolute inset-0 flex items-center justify-center"
+                onClick={() => setShowVideo(true)}
+              >
+                <PlayCircle className="w-16 h-16 text-white opacity-80 hover:opacity-100 transition" />
+              </button>
+            </div>
+          )}
+        </motion.div>
+      ) : post.post.imageUrl ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="w-full"
         >
           <Image
             src={post.post.imageUrl}
@@ -103,11 +141,8 @@ export function LinkedInPostCard({
             height={450}
             className="w-full max-h-[450px] object-cover"
           />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <PlayCircle className="w-16 h-16 text-white opacity-80 hover:opacity-100 transition" />
-          </div>
         </motion.div>
-      )}
+      ) : null}
 
       {/* Footer actions */}
       <div className="px-4 py-2 text-xs text-gray-500 border-t flex items-center gap-2">
@@ -115,10 +150,18 @@ export function LinkedInPostCard({
         <span>· 2 Comments</span>
       </div>
       <div className="px-4 py-2 border-t flex justify-around text-sm text-gray-600">
-        <button className="hover:text-black pointer-events-none">👍 Like</button>
-        <button className="hover:text-black pointer-events-none">💬 Comment</button>
-        <button className="hover:text-black pointer-events-none">🔗 Share</button>
-        <button className="hover:text-black pointer-events-none">📄 Transcript</button>
+        <button className="hover:text-black pointer-events-none">
+          👍 Like
+        </button>
+        <button className="hover:text-black pointer-events-none">
+          💬 Comment
+        </button>
+        <button className="hover:text-black pointer-events-none">
+          🔗 Share
+        </button>
+        <button className="hover:text-black pointer-events-none">
+          📄 Transcript
+        </button>
       </div>
     </motion.div>
   );

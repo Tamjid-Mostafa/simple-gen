@@ -30,6 +30,7 @@ export async function fetchLinkedInPostData(url: string) {
       $("img[alt^='View profile for']").attr("data-delayed-url") ||
       $("img[alt^='View profile for']").attr("data-ghost-url") ||
       null;
+
     const rawTitle =
       $("p.text-color-text-low-emphasis.truncate").text().trim() ||
       $(
@@ -40,14 +41,31 @@ export async function fetchLinkedInPostData(url: string) {
     const authorTitle = he.decode(rawTitle || "Unknown");
 
     const datePublished = $("time").first().text().trim() || "Unknown";
+
     const rawContent =
       $("meta[name='description']").attr("content")?.trim() ||
       $("p[data-test-id='main-feed-activity-card__commentary']").text().trim();
-
     const articleBody = he.decode(rawContent || "No content found");
 
     const postImage =
       $("meta[property='og:image']").attr("content")?.trim() || null;
+
+    // 🆕 Extract video from data-sources attribute
+    const videoTag = $("video[data-sources]");
+    let videoUrl: string | null = null;
+
+    if (videoTag.length) {
+      const encodedSources = videoTag.attr("data-sources");
+      if (encodedSources) {
+        try {
+          const decoded = he.decode(encodedSources);
+          const sources = JSON.parse(decoded);
+          videoUrl = sources?.[0]?.src || null;
+        } catch {
+          videoUrl = null;
+        }
+      }
+    }
 
     return {
       author: {
@@ -59,6 +77,7 @@ export async function fetchLinkedInPostData(url: string) {
         publishedAt: datePublished,
         content: articleBody,
         imageUrl: postImage,
+        videoUrl,
       },
     };
   } catch (error: any) {

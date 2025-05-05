@@ -81,6 +81,7 @@ export default function GenerateComment() {
       publishedAt: string;
       content: string;
       imageUrl: string | null;
+      videoUrl: string | null;
     };
   } | null>(null);
   const [copied, setCopied] = useState(false);

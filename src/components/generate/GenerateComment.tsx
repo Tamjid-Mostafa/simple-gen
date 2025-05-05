@@ -36,7 +36,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { LinkedInPostCard } from "./LinkedInPostCard";
 
 // Define form data types with proper typing
@@ -88,6 +88,10 @@ export default function GenerateComment() {
   const [remainingConnects, setRemainingConnects] = useState(49);
   const [urlValidated, setUrlValidated] = useState<boolean | null>(null);
   const [isFetchingPostData, setIsFetchingPostData] = useState(false);
+  const [status, setStatus] = useState<
+    "idle" | "fetching" | "generating" | "done"
+  >("idle");
+
   const resultAreaRef = useRef<HTMLDivElement>(null);
 
   // AI completion setup
@@ -141,9 +145,9 @@ export default function GenerateComment() {
     }
 
     try {
-      setIsFetchingPostData(true);
-
+      setStatus("fetching");
       const postData = await fetchLinkedInPostData(formData.linkedinPost);
+
       if (!postData || !postData.post?.content) {
         throw new Error("Failed to retrieve post content.");
       }
@@ -154,11 +158,14 @@ export default function GenerateComment() {
 
       setIsFetchingPostData(false);
       console.log(postData);
+      setStatus("generating");
       const prompt = constructPrompt(content, authorName);
       await complete(prompt);
 
       setRemainingConnects((prev) => Math.max(prev - 1, 0));
       resultAreaRef.current?.scrollIntoView({ behavior: "smooth" });
+      setStatus("done");
+      // setTimeout(() => setStatus("idle"), 2000);
     } catch (err: unknown) {
       setIsFetchingPostData(false);
       const message =
@@ -231,6 +238,7 @@ export default function GenerateComment() {
       linkedinPost: "",
       mentionAuthor: true,
     });
+    setStatus("idle");
     setPostInfo(null);
   };
 
@@ -356,25 +364,37 @@ export default function GenerateComment() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-
-            {/* Post Information (shows after fetching) */}
-            {postInfo && <LinkedInPostCard post={postInfo} />}
-
             {/* Action Buttons */}
             <div className="flex gap-3 pt-2">
               <Button
                 type="submit"
-                disabled={isLoading || isFetchingPostData || !urlValidated}
-                className="flex-1"
+                disabled={
+                  isLoading ||
+                  isFetchingPostData ||
+                  !urlValidated ||
+                  status !== "idle"
+                }
+                className="flex-1 relative overflow-hidden h-10"
               >
-                {isLoading || isFetchingPostData ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating comment...
-                  </>
-                ) : (
-                  "Generate Comment"
+                {(status === "fetching" || status === "generating") && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin absolute left-8" />
                 )}
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={status}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    {status === "idle" && "Create Comment"}
+                    {status === "fetching" && "Getting Post..."}
+                    {status === "generating" && "Creating Comment..."}
+                    {status === "done" && "Done!"}
+                  </motion.div>
+                </AnimatePresence>
               </Button>
 
               <TooltipProvider>
@@ -394,6 +414,8 @@ export default function GenerateComment() {
                 </Tooltip>
               </TooltipProvider>
             </div>
+            {/* Post Information (shows after fetching) */}
+            {postInfo && <LinkedInPostCard post={postInfo} />}
           </CardContent>
         </form>
 

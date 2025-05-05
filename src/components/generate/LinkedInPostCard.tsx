@@ -107,7 +107,7 @@ export function LinkedInPostCard({
               controls
               autoPlay
               playsInline
-              className="w-full max-h-[450px] object-cover"
+              className="w-full"
             />
           ) : (
             <div className="relative w-full">
@@ -116,7 +116,7 @@ export function LinkedInPostCard({
                 alt="Post preview"
                 width={800}
                 height={450}
-                className="w-full max-h-[450px] object-cover"
+                className="w-full"
               />
               <button
                 className="absolute inset-0 flex items-center justify-center"
@@ -139,7 +139,7 @@ export function LinkedInPostCard({
             alt="Post media"
             width={800}
             height={450}
-            className="w-full max-h-[450px] object-cover"
+            className="w-full"
           />
         </motion.div>
       ) : null}

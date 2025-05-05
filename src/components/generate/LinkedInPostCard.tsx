@@ -50,7 +50,7 @@ export function LinkedInPostCard({
           <span className="font-semibold text-sm">
             {post.author.name}
           </span>
-          <span className="text-xs text-gray-300 leading-tight line-clamp-1">
+          <span className="text-xs text-gray-400 leading-tight line-clamp-1">
             {post.author.title}
           </span>
           <span className="text-xs text-gray-400">{post.post.publishedAt}</span>
@@ -145,7 +145,7 @@ export function LinkedInPostCard({
       ) : null}
 
       {/* Footer actions */}
-      <div className="px-4 py-2 text-xs text-gray-300 border-t flex items-center gap-2">
+      <div className="px-4 py-2 text-xs text-gray-400 border-t flex items-center gap-2">
         <span className=" font-medium">1</span>
         <span>· 2 Comments</span>
       </div>

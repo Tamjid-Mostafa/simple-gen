@@ -165,7 +165,7 @@ export default function GenerateComment() {
       setRemainingConnects((prev) => Math.max(prev - 1, 0));
       resultAreaRef.current?.scrollIntoView({ behavior: "smooth" });
       setStatus("done");
-      // setTimeout(() => setStatus("idle"), 2000);
+      setTimeout(() => setStatus("idle"), 3000);
     } catch (err: unknown) {
       setIsFetchingPostData(false);
       const message =

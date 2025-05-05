@@ -29,7 +29,6 @@ export function LinkedInPostCard({
 
   const content = post.post.content || "No content available";
   const showMore = content.length > 200;
-  console.log(post);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -40,7 +39,7 @@ export function LinkedInPostCard({
       {/* Top section */}
       <div className="flex gap-3 p-4">
         <Image
-          src={post.author.imageUrl || "/default-avatar.png"}
+          src={post.author.imageUrl || "/default-avatar.svg"}
           alt="Author"
           width={48}
           height={48}

@@ -35,7 +35,7 @@ export function LinkedInPostCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full max-w-xl mx-auto border rounded-lg bg-white shadow-sm overflow-hidden"
+      className="w-full max-w-xl mx-auto border rounded-lg  shadow-sm overflow-hidden"
     >
       {/* Top section */}
       <div className="flex gap-3 p-4">
@@ -47,10 +47,10 @@ export function LinkedInPostCard({
           className="rounded-full w-12 h-12 object-cover"
         />
         <div className="flex flex-col justify-center">
-          <span className="font-semibold text-sm text-black">
+          <span className="font-semibold text-sm">
             {post.author.name}
           </span>
-          <span className="text-xs text-gray-500 leading-tight line-clamp-1">
+          <span className="text-xs text-gray-300 leading-tight line-clamp-1">
             {post.author.title}
           </span>
           <span className="text-xs text-gray-400">{post.post.publishedAt}</span>
@@ -67,7 +67,7 @@ export function LinkedInPostCard({
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className={cn(
-              "text-sm text-gray-800 whitespace-pre-wrap overflow-hidden",
+              "text-sm whitespace-pre-wrap overflow-hidden",
               {
                 "line-clamp-3": !expanded && showMore,
                 "line-clamp-none": expanded,
@@ -145,21 +145,21 @@ export function LinkedInPostCard({
       ) : null}
 
       {/* Footer actions */}
-      <div className="px-4 py-2 text-xs text-gray-500 border-t flex items-center gap-2">
+      <div className="px-4 py-2 text-xs text-gray-300 border-t flex items-center gap-2">
         <span className=" font-medium">1</span>
         <span>· 2 Comments</span>
       </div>
-      <div className="px-4 py-2 border-t flex justify-around text-sm text-gray-600">
-        <button className="hover:text-black pointer-events-none">
+      <div className="px-4 py-2 border-t flex justify-around text-sm text-gray-500">
+        <button className="pointer-events-none">
           👍 Like
         </button>
-        <button className="hover:text-black pointer-events-none">
+        <button className="pointer-events-none">
           💬 Comment
         </button>
-        <button className="hover:text-black pointer-events-none">
+        <button className="pointer-events-none">
           🔗 Share
         </button>
-        <button className="hover:text-black pointer-events-none">
+        <button className="pointer-events-none">
           📄 Transcript
         </button>
       </div>

@@ -154,8 +154,8 @@ export default function GenerateComment() {
 
       setIsFetchingPostData(false);
       console.log(postData);
-      // const prompt = constructPrompt(content, authorName);
-      // await complete(prompt);
+      const prompt = constructPrompt(content, authorName);
+      await complete(prompt);
 
       setRemainingConnects((prev) => Math.max(prev - 1, 0));
       resultAreaRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -358,37 +358,6 @@ export default function GenerateComment() {
             </Accordion>
 
             {/* Post Information (shows after fetching) */}
-            {/* {(postInfo || isFetchingPostData) && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="bg-gray-50 p-4 rounded-lg border border-gray-200 h-[134px]"
-              >
-                <h3 className="font-medium mb-2">Post Preview</h3>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: postInfo?.articleBody ? 1 : 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="text-sm text-gray-600 line-clamp-3"
-                >
-                  {postInfo?.articleBody?.substring(0, 150)}
-                  {postInfo?.articleBody && postInfo.articleBody.length > 150
-                    ? "..."
-                    : ""}
-                </motion.div>
-                {postInfo?.author?.name && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: postInfo?.author?.name ? 1 : 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className="mt-2 text-sm text-gray-500"
-                  >
-                    Author: {postInfo.author.name}
-                  </motion.div>
-                )}
-              </motion.div>
-            )} */}
             {postInfo && <LinkedInPostCard post={postInfo} />}
 
             {/* Action Buttons */}

@@ -36,6 +36,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { motion } from "motion/react";
+import { LinkedInPostCard } from "./LinkedInPostCard";
 
 // Define form data types with proper typing
 type WordCountOption = "<10 Words" | "<25 Words" | "<50 Words" | "<75 Words";
@@ -70,13 +72,21 @@ export default function GenerateComment() {
 
   // State management
   const [postInfo, setPostInfo] = useState<{
-    articleBody?: string;
-    author?: { name: string };
+    author: {
+      name: string;
+      title: string;
+      imageUrl: string | null;
+    };
+    post: {
+      publishedAt: string;
+      content: string;
+      imageUrl: string | null;
+    };
   } | null>(null);
   const [copied, setCopied] = useState(false);
   const [remainingConnects, setRemainingConnects] = useState(49);
   const [urlValidated, setUrlValidated] = useState<boolean | null>(null);
-
+  const [isFetchingPostData, setIsFetchingPostData] = useState(false);
   const resultAreaRef = useRef<HTMLDivElement>(null);
 
   // AI completion setup
@@ -122,7 +132,7 @@ export default function GenerateComment() {
 
     if (!urlValidated) {
       toast({
-        title: "Invalid LinkedIn URL",
+        title: "Invalid URL",
         description: "Please enter a valid LinkedIn post URL.",
         variant: "destructive",
       });
@@ -130,30 +140,33 @@ export default function GenerateComment() {
     }
 
     try {
-      // Fetch LinkedIn post data
-      const response = await fetchLinkedInPostData(formData.linkedinPost);
-      if (!response || !response.articleBody) {
-        throw new Error("Could not fetch post content");
+      setIsFetchingPostData(true);
+
+      const postData = await fetchLinkedInPostData(formData.linkedinPost);
+      if (!postData || !postData.post?.content) {
+        throw new Error("Failed to retrieve post content.");
       }
 
-      setPostInfo(response);
-      const { articleBody, author } = response;
+      setPostInfo(postData);
+      const { content } = postData.post;
+      const authorName = postData.author?.name || "the author";
 
-      // Construct the prompt for AI
-      const prompt = constructPrompt(articleBody, author?.name);
+      setIsFetchingPostData(false);
+      console.log(postData);
+      // const prompt = constructPrompt(content, authorName);
+      // await complete(prompt);
 
-      // Generate comment
-      await complete(prompt);
-      setRemainingConnects((prev) => Math.max(0, prev - 1));
-
-      // Scroll to result
+      setRemainingConnects((prev) => Math.max(prev - 1, 0));
       resultAreaRef.current?.scrollIntoView({ behavior: "smooth" });
-    } catch (error) {
-      console.error("Error generating comment:", error);
+    } catch (err: unknown) {
+      setIsFetchingPostData(false);
+      const message =
+        err instanceof Error ? err.message : "Something went wrong.";
+      console.error("Comment generation error:", err);
+
       toast({
-        title: "Error",
-        description:
-          error instanceof Error ? error.message : "Failed to generate comment",
+        title: "Error Generating Comment",
+        description: message,
         variant: "destructive",
       });
     }
@@ -174,16 +187,6 @@ export default function GenerateComment() {
     
       Post content:
       "${articleBody}"
-      ${
-        formData.keywordsInclude
-          ? `Include these keywords: ${formData.keywordsInclude}`
-          : ""
-      }
-      ${
-        formData.keywordsExclude
-          ? `Avoid these keywords: ${formData.keywordsExclude}`
-          : ""
-      }
       ${formData.wordCount ? `Limit the comment to: ${formData.wordCount}` : ""}
       ${
         formData.hasHashtags
@@ -246,9 +249,6 @@ export default function GenerateComment() {
             <CardTitle className="text-2xl font-bold">
               LinkedIn Comment Generator
             </CardTitle>
-            {/* <Badge variant="outline" className="text-blue-500 whitespace-nowrap">
-              {remainingConnects} connects remaining
-            </Badge> */}
           </div>
         </CardHeader>
 
@@ -351,58 +351,53 @@ export default function GenerateComment() {
                         </Label>
                       </div>
                     </div>
-
-                    {/* Advanced Options - could be enabled in a future version */}
-                    {/* <div className="space-y-2 pt-2">
-                      <Label className="font-medium">Keywords to Include</Label>
-                      <Input
-                        value={formData.keywordsInclude}
-                        onChange={(e) => handleChange("keywordsInclude", e.target.value)}
-                        placeholder="Separate with commas (e.g., value, growth, strategy)"
-                        className="border p-3 rounded-lg"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label className="font-medium">Keywords to Exclude</Label>
-                      <Input
-                        value={formData.keywordsExclude}
-                        onChange={(e) => handleChange("keywordsExclude", e.target.value)}
-                        placeholder="Separate with commas (e.g., competitor, negative)"
-                        className="border p-3 rounded-lg"
-                      />
-                    </div> */}
                   </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
 
             {/* Post Information (shows after fetching) */}
-            {postInfo && (
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            {/* {(postInfo || isFetchingPostData) && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="bg-gray-50 p-4 rounded-lg border border-gray-200 h-[134px]"
+              >
                 <h3 className="font-medium mb-2">Post Preview</h3>
-                <p className="text-sm text-gray-600 line-clamp-3">
-                  {postInfo.articleBody?.substring(0, 150)}
-                  {postInfo.articleBody && postInfo.articleBody.length > 150
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: postInfo?.articleBody ? 1 : 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="text-sm text-gray-600 line-clamp-3"
+                >
+                  {postInfo?.articleBody?.substring(0, 150)}
+                  {postInfo?.articleBody && postInfo.articleBody.length > 150
                     ? "..."
                     : ""}
-                </p>
-                {postInfo.author?.name && (
-                  <div className="mt-2 text-sm text-gray-500">
+                </motion.div>
+                {postInfo?.author?.name && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: postInfo?.author?.name ? 1 : 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="mt-2 text-sm text-gray-500"
+                  >
                     Author: {postInfo.author.name}
-                  </div>
+                  </motion.div>
                 )}
-              </div>
-            )}
+              </motion.div>
+            )} */}
+            {postInfo && <LinkedInPostCard post={postInfo} />}
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-2">
               <Button
                 type="submit"
-                disabled={isLoading || !urlValidated}
+                disabled={isLoading || isFetchingPostData || !urlValidated}
                 className="flex-1"
               >
-                {isLoading ? (
+                {isLoading || isFetchingPostData ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Creating comment...
@@ -434,45 +429,68 @@ export default function GenerateComment() {
 
         {/* Result Section */}
         {(isLoading || completion) && (
-          <CardFooter className="flex-col pt-6 border-t">
-            <div className="text-base font-medium mb-2">Generated Comment</div>
-            <div ref={resultAreaRef} className="w-full relative group">
-              <div
-                className="w-full font-medium text-base p-4 border border-gray-300 rounded-md min-h-40"
-                style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-              >
-                {completion ||
-                  (isLoading ? (
-                    <div className="flex items-center justify-center h-32">
-                      <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                    </div>
-                  ) : (
-                    ""
-                  ))}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <CardFooter className="flex-col pt-6 border-t">
+              <div className="text-base font-medium mb-2">
+                Generated Comment
               </div>
-              {completion && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleCopy}
-                  disabled={!completion || isLoading}
-                  className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                >
-                  {copied ? (
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-              )}
-            </div>
 
-            {error && (
-              <div className="mt-2 text-sm text-red-500">
-                Error: {error.message || "Something went wrong"}
-              </div>
-            )}
-          </CardFooter>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: completion ? 1 : 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                ref={resultAreaRef}
+                className="w-full relative group"
+              >
+                <div className="w-full font-medium text-base p-4 border border-gray-300 rounded-md min-h-40">
+                  {completion ? (
+                    completion
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4 }}
+                      className="flex items-center justify-center h-32"
+                    >
+                      <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                    </motion.div>
+                  )}
+                </div>
+
+                {completion && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6, duration: 0.3 }}
+                    className="absolute top-2 right-2"
+                  >
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleCopy}
+                      className="bg-white/80 backdrop-blur-sm hover:bg-gray-100"
+                    >
+                      {copied ? (
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </motion.div>
+                )}
+              </motion.div>
+
+              {error && (
+                <div className="mt-2 text-sm text-red-500">
+                  Error: {error.message || "Something went wrong"}
+                </div>
+              )}
+            </CardFooter>
+          </motion.div>
         )}
       </Card>
     </div>

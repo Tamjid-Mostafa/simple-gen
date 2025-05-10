@@ -14,7 +14,6 @@ const Layout = ({ children }: Props) => {
         {children}
         <Footer />
       </div>
-      ˝
     </ReactLenis>
   );
 };

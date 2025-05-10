@@ -191,7 +191,6 @@ export default function GenerateComment() {
       ➤ **Supporting Intro** — Start by agreeing with the post or showing enthusiasm about the author's perspective.
       ➤ **Restating Content** — Briefly restate or summarize the key points from the post.
       ➤ **Adding Additional Value or New Perspective** — Add your own insights, experiences, or perspective related to the post's topic.
-      ➤ **More Support** — End with a supportive statement, encouragement, or a reinforcement of the message.
     
       Post content:
       "${articleBody}"

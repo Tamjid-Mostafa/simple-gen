@@ -82,6 +82,7 @@ export function Navbar() {
               Try SimpleGen
             </Button>
           </Link>
+          <ModeToggle />
         </nav>
 
         <div className="flex items-center gap-4 md:hidden">

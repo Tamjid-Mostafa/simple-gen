@@ -128,29 +128,6 @@ export default function ComingSoonPage() {
   const titleText = "COMING SOON";
   const titleLetters = titleText.split("");
 
-  const socialLinks = [
-    {
-      name: "LinkedIn",
-      icon: "",
-      href: "https://www.linkedin.com/company/uistreams",
-    },
-    {
-      name: "X",
-      icon: "",
-      href: "",
-    },
-    {
-      name: "Facebook",
-      icon: "",
-      href: "",
-    },
-    {
-      name: "Discord",
-      icon: "",
-      href: "https://discord.gg/7bF6Hm7qCC",
-    },
-  ];
-
   return (
     <div className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-background text-foreground">
       {/* Animated background elements */}

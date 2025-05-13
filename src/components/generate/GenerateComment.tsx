@@ -3,31 +3,50 @@
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ToneSelect } from "./ToneSelect";
-import { CheckCircle, Copy, Loader2, RefreshCw, Link as LinkIcon } from "lucide-react";
+import {
+  CheckCircle,
+  Copy,
+  Loader2,
+  RefreshCw,
+  Link as LinkIcon,
+} from "lucide-react";
 import { fetchLinkedInPostData } from "./GetPostText";
 import { useCompletion } from "@ai-sdk/react";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Label } from "@/components/ui/label";
-import { 
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger
+  AccordionTrigger,
 } from "@/components/ui/accordion";
+import { AnimatePresence, motion } from "motion/react";
+import { LinkedInPostCard } from "./LinkedInPostCard";
 
 // Define form data types with proper typing
 type WordCountOption = "<10 Words" | "<25 Words" | "<50 Words" | "<75 Words";
-type ToneOption = "Informative" | "Friendly" | "Professional" | "Enthusiastic" | "Thoughtful";
+type ToneOption =
+  | "Informative"
+  | "Friendly"
+  | "Professional"
+  | "Enthusiastic"
+  | "Thoughtful";
 
 interface FormData {
   tone: ToneOption;
@@ -50,26 +69,42 @@ export default function GenerateComment() {
     linkedinPost: "",
     mentionAuthor: true,
   });
-  
+
   // State management
   const [postInfo, setPostInfo] = useState<{
-    articleBody?: string;
-    author?: { name: string };
+    author: {
+      name: string;
+      title: string;
+      imageUrl: string | null;
+    };
+    post: {
+      publishedAt: string;
+      content: string;
+      imageUrl: string | null;
+      videoUrl: string | null;
+    };
   } | null>(null);
   const [copied, setCopied] = useState(false);
   const [remainingConnects, setRemainingConnects] = useState(49);
   const [urlValidated, setUrlValidated] = useState<boolean | null>(null);
-  
+  const [isFetchingPostData, setIsFetchingPostData] = useState(false);
+  const [status, setStatus] = useState<
+    "idle" | "fetching" | "generating" | "done"
+  >("idle");
+
   const resultAreaRef = useRef<HTMLDivElement>(null);
-  
+
   // AI completion setup
   const { completion, complete, isLoading, error } = useCompletion({
     api: "/api/generate-comment",
   });
 
   // Handle form field changes with type safety
-  const handleChange = <K extends keyof FormData>(field: K, value: FormData[K]) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleChange = <K extends keyof FormData>(
+    field: K,
+    value: FormData[K]
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   // URL validation function
@@ -90,75 +125,82 @@ export default function GenerateComment() {
   // Handle form submission
   const handleGenerateComment = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.linkedinPost) {
       toast({
         title: "Missing LinkedIn Post URL",
         description: "Please enter a LinkedIn post URL.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
-    
+
     if (!urlValidated) {
       toast({
-        title: "Invalid LinkedIn URL",
+        title: "Invalid URL",
         description: "Please enter a valid LinkedIn post URL.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
-    
+
     try {
-      // Fetch LinkedIn post data
-      const response = await fetchLinkedInPostData(formData.linkedinPost);
-      if (!response || !response.articleBody) {
-        throw new Error("Could not fetch post content");
+      setStatus("fetching");
+      const postData = await fetchLinkedInPostData(formData.linkedinPost);
+
+      if (!postData || !postData.post?.content) {
+        throw new Error("Failed to retrieve post content.");
       }
-      
-      setPostInfo(response);
-      const { articleBody, author } = response;
-      
-      // Construct the prompt for AI
-      const prompt = constructPrompt(articleBody, author?.name);
-      
-      // Generate comment
+
+      setPostInfo(postData);
+      const { content } = postData.post;
+      const authorName = postData.author?.name || "the author";
+
+      setIsFetchingPostData(false);
+      console.log(postData);
+      setStatus("generating");
+      const prompt = constructPrompt(content, authorName);
       await complete(prompt);
-      setRemainingConnects(prev => Math.max(0, prev - 1));
-      
-      // Scroll to result
+
+      setRemainingConnects((prev) => Math.max(prev - 1, 0));
       resultAreaRef.current?.scrollIntoView({ behavior: "smooth" });
-    } catch (error) {
-      console.error("Error generating comment:", error);
+      setStatus("done");
+      setTimeout(() => setStatus("idle"), 3000);
+    } catch (err: unknown) {
+      setIsFetchingPostData(false);
+      const message =
+        err instanceof Error ? err.message : "Something went wrong.";
+      console.error("Comment generation error:", err);
+
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to generate comment",
-        variant: "destructive"
+        title: "Error Generating Comment",
+        description: message,
+        variant: "destructive",
       });
     }
   };
 
   // Construct prompt based on form data
-  const constructPrompt = (articleBody: string, authorName?: string): string => {
+  const constructPrompt = (
+    articleBody: string,
+    authorName?: string
+  ): string => {
     return `
-      Write a LinkedIn comment in response to the post below, following this structure:
-      
-      ➤ **Supporting Intro** — Start by agreeing with the post or showing enthusiasm about the author's perspective.
-      ➤ **Restating Content** — Briefly restate or summarize the key points from the post.
-      ➤ **Adding Additional Value or New Perspective** — Add your own insights, experiences, or perspective related to the post's topic.
-      ➤ **More Support** — End with a supportive statement, encouragement, or a reinforcement of the message.
-    
+      Write a LinkedIn comment in response to the post below:
       Post content:
       "${articleBody}"
-      ${formData.keywordsInclude ? `Include these keywords: ${formData.keywordsInclude}` : ""}
-      ${formData.keywordsExclude ? `Avoid these keywords: ${formData.keywordsExclude}` : ""}
       ${formData.wordCount ? `Limit the comment to: ${formData.wordCount}` : ""}
-      ${formData.hasHashtags ? "Include 1-3 relevant hashtags at the end." : "Do not include hashtags."}
-      
+      ${
+        formData.hasHashtags
+          ? "Include 1-3 relevant hashtags at the end."
+          : "Do not include hashtags."
+      }
       Tone: ${formData.tone}
-      ${formData.mentionAuthor && authorName ? `Make sure to mention the author: ${authorName}` : ""}
-      
-      The comment should feel natural, engaging, and not overly promotional or spammy. It should sound like a genuine person engaging with content they appreciate.
+      ${
+        formData.mentionAuthor && authorName
+          ? `Make sure to mention the author: ${authorName}`
+          : ""
+      }
     `;
   };
 
@@ -171,7 +213,7 @@ export default function GenerateComment() {
       title: "Copied!",
       description: "Comment copied to clipboard",
     });
-    
+
     // Reset copy status after 3 seconds
     setTimeout(() => setCopied(false), 3000);
   };
@@ -187,11 +229,17 @@ export default function GenerateComment() {
       linkedinPost: "",
       mentionAuthor: true,
     });
+    setStatus("idle");
     setPostInfo(null);
   };
 
   // Word count options
-  const wordCountOptions: WordCountOption[] = ["<10 Words", "<25 Words", "<50 Words", "<75 Words"];
+  const wordCountOptions: WordCountOption[] = [
+    "<10 Words",
+    "<25 Words",
+    "<50 Words",
+    "<75 Words",
+  ];
 
   return (
     <div className="max-w-3xl w-full mx-auto py-8 space-y-8">
@@ -201,12 +249,9 @@ export default function GenerateComment() {
             <CardTitle className="text-2xl font-bold">
               LinkedIn Comment Generator
             </CardTitle>
-            {/* <Badge variant="outline" className="text-blue-500 whitespace-nowrap">
-              {remainingConnects} connects remaining
-            </Badge> */}
           </div>
         </CardHeader>
-        
+
         <form onSubmit={handleGenerateComment}>
           <CardContent className="pt-6 space-y-6">
             {/* LinkedIn Post URL Input */}
@@ -231,7 +276,7 @@ export default function GenerateComment() {
                 />
               </div>
             </div>
-            
+
             {/* Comment Generation Settings */}
             <Accordion type="single" collapsible defaultValue="settings">
               <AccordionItem value="settings">
@@ -244,10 +289,12 @@ export default function GenerateComment() {
                     <div className="space-y-2">
                       <ToneSelect
                         value={formData.tone}
-                        onChange={(value) => handleChange("tone", value as ToneOption)}
+                        onChange={(value) =>
+                          handleChange("tone", value as ToneOption)
+                        }
                       />
                     </div>
-                    
+
                     {/* Word Count */}
                     <div className="space-y-2">
                       <Label className="font-medium">Word Count</Label>
@@ -257,7 +304,11 @@ export default function GenerateComment() {
                             key={count}
                             type="button"
                             onClick={() => handleChange("wordCount", count)}
-                            variant={formData.wordCount === count ? "default" : "outline"}
+                            variant={
+                              formData.wordCount === count
+                                ? "default"
+                                : "outline"
+                            }
                             className="transition-colors duration-200"
                           >
                             {count}
@@ -265,14 +316,14 @@ export default function GenerateComment() {
                         ))}
                       </div>
                     </div>
-                    
+
                     {/* Optional Settings */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="hashtags"
                           checked={formData.hasHashtags}
-                          onCheckedChange={() => 
+                          onCheckedChange={() =>
                             handleChange("hasHashtags", !formData.hasHashtags)
                           }
                         />
@@ -280,79 +331,63 @@ export default function GenerateComment() {
                           Include Hashtags
                         </Label>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="mention-author"
                           checked={formData.mentionAuthor}
-                          onCheckedChange={() => 
-                            handleChange("mentionAuthor", !formData.mentionAuthor)
+                          onCheckedChange={() =>
+                            handleChange(
+                              "mentionAuthor",
+                              !formData.mentionAuthor
+                            )
                           }
                         />
-                        <Label htmlFor="mention-author" className="cursor-pointer">
+                        <Label
+                          htmlFor="mention-author"
+                          className="cursor-pointer"
+                        >
                           Mention Author
                         </Label>
                       </div>
                     </div>
-                    
-                    {/* Advanced Options - could be enabled in a future version */}
-                    {/* <div className="space-y-2 pt-2">
-                      <Label className="font-medium">Keywords to Include</Label>
-                      <Input
-                        value={formData.keywordsInclude}
-                        onChange={(e) => handleChange("keywordsInclude", e.target.value)}
-                        placeholder="Separate with commas (e.g., value, growth, strategy)"
-                        className="border p-3 rounded-lg"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label className="font-medium">Keywords to Exclude</Label>
-                      <Input
-                        value={formData.keywordsExclude}
-                        onChange={(e) => handleChange("keywordsExclude", e.target.value)}
-                        placeholder="Separate with commas (e.g., competitor, negative)"
-                        className="border p-3 rounded-lg"
-                      />
-                    </div> */}
                   </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            
-            {/* Post Information (shows after fetching) */}
-            {postInfo && (
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 className="font-medium mb-2">Post Preview</h3>
-                <p className="text-sm text-gray-600 line-clamp-3">
-                  {postInfo.articleBody?.substring(0, 150)}
-                  {postInfo.articleBody && postInfo.articleBody.length > 150 ? "..." : ""}
-                </p>
-                {postInfo.author?.name && (
-                  <div className="mt-2 text-sm text-gray-500">
-                    Author: {postInfo.author.name}
-                  </div>
-                )}
-              </div>
-            )}
-            
             {/* Action Buttons */}
             <div className="flex gap-3 pt-2">
               <Button
                 type="submit"
-                disabled={isLoading || !urlValidated}
-                className="flex-1"
+                disabled={
+                  isLoading ||
+                  isFetchingPostData ||
+                  !urlValidated ||
+                  status !== "idle"
+                }
+                className="flex-1 relative overflow-hidden h-10"
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating comment...
-                  </>
-                ) : (
-                  "Generate Comment"
+                {(status === "fetching" || status === "generating") && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin absolute left-8" />
                 )}
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={status}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    {status === "idle" && "Create Comment"}
+                    {status === "fetching" && "Getting Post..."}
+                    {status === "generating" && "Creating Comment..."}
+                    {status === "done" && "Done!"}
+                  </motion.div>
+                </AnimatePresence>
               </Button>
-              
+
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -366,56 +401,79 @@ export default function GenerateComment() {
                       <RefreshCw className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>
-                    Reset form
-                  </TooltipContent>
+                  <TooltipContent>Reset form</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
+            {/* Post Information (shows after fetching) */}
+            {postInfo && <LinkedInPostCard post={postInfo} />}
           </CardContent>
         </form>
-        
+
         {/* Result Section */}
         {(isLoading || completion) && (
-          <CardFooter className="flex-col pt-6 border-t">
-            <div className="text-base font-medium mb-2">Generated Comment</div>
-            <div ref={resultAreaRef} className="w-full relative group">
-              <div
-                className="w-full font-medium text-base p-4 border border-gray-300 rounded-md min-h-40 bg-white"
-                style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <CardFooter className="flex-col pt-6 border-t">
+              <div className="text-base font-medium mb-2">
+                Generated Comment
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: completion ? 1 : 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                ref={resultAreaRef}
+                className="w-full relative group"
               >
-                {completion || 
-                 (isLoading ? (
-                   <div className="flex items-center justify-center h-32">
-                     <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                   </div>
-                 ) : "")
-                }
-              </div>
-              
-              {completion && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleCopy}
-                  disabled={!completion || isLoading}
-                  className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                >
-                  {copied ? (
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                <div className="w-full font-medium text-base p-4 border border-gray-300 rounded-md min-h-40">
+                  {completion ? (
+                    completion
                   ) : (
-                    <Copy className="h-4 w-4" />
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4 }}
+                      className="flex items-center justify-center h-32"
+                    >
+                      <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                    </motion.div>
                   )}
-                </Button>
+                </div>
+
+                {completion && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6, duration: 0.3 }}
+                    className="absolute top-2 right-2"
+                  >
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleCopy}
+                      className="bg-white/80 backdrop-blur-sm hover:bg-gray-100"
+                    >
+                      {copied ? (
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </motion.div>
+                )}
+              </motion.div>
+
+              {error && (
+                <div className="mt-2 text-sm text-red-500">
+                  Error: {error.message || "Something went wrong"}
+                </div>
               )}
-            </div>
-            
-            {error && (
-              <div className="mt-2 text-sm text-red-500">
-                Error: {error.message || "Something went wrong"}
-              </div>
-            )}
-          </CardFooter>
+            </CardFooter>
+          </motion.div>
         )}
       </Card>
     </div>

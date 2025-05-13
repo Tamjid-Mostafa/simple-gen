@@ -12,6 +12,9 @@ export function Navbar() {
   const [showNav, setShowNav] = useState(true);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
+  const { user, isLoaded } = useUser();
+
+  console.log(user);
 
   // Lock body scroll when menu open
   useEffect(() => {

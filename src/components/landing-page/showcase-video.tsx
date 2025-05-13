@@ -1,9 +1,8 @@
 "use client";
 
-import { MotionValue, motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useEffect, useState } from "react";
 import { Hero } from "./hero";
-
 export function ShowcaseVideo() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -15,6 +14,25 @@ export function ShowcaseVideo() {
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
+  }, []);
+  // Inside your useEffect
+  useEffect(() => {
+    const iframeWrapper = document.getElementById("video-wrapper");
+
+    let timeout: ReturnType<typeof setTimeout>;
+
+    const onScroll = () => {
+      if (iframeWrapper) {
+        iframeWrapper.style.pointerEvents = "none";
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          iframeWrapper.style.pointerEvents = "auto";
+        }, 150); // Delay in ms
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const scaleX = useTransform(
@@ -46,7 +64,10 @@ export function ShowcaseVideo() {
           }}
           className="w-full md:max-w-5xl max-w-md mt-4 mx-auto h-[16rem] md:h-[40rem] md:w-full border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-[0_0_0_rgba(0,0,0,0.3),0_9px_20px_rgba(0,0,0,0.29),0_37px_37px_rgba(0,0,0,0.26),0_84px_50px_rgba(0,0,0,0.15),0_149px_60px_rgba(0,0,0,0.04),0_233px_65px_rgba(0,0,0,0.01)]"
         >
-          <div className="h-full w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900">
+          <div
+            id="video-wrapper"
+            className="h-full w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900"
+          >
             <iframe
               width="100%"
               height="100%"

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { GlobalStateProvider } from "@/context/GlobalStateContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +27,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main className="">{children}</main>
+            <GlobalStateProvider>
+              <main className="">{children}</main>
+            </GlobalStateProvider>
           </ThemeProvider>
         </body>
       </html>

@@ -42,17 +42,16 @@ type FormData = {
 export default function GeneratePost() {
   // Consolidated form state with proper typing
   const [formData, setFormData] = useState<FormData>({
-    tone: "storytelling",
-    type: "mistake",
+    tone: "storytelling 📖",
+    type: "story 📘",
     topic: "freelancing",
     goal: "",
     keywords: "",
-    persona: "",
     audience: "",
+    persona: "",
     characters: "600",
-    customEnding: ``,
+    customEnding: "",
   });
-
   // Copy status state
   const [copied, setCopied] = useState(false);
 
@@ -144,8 +143,34 @@ export default function GeneratePost() {
   };
 
   // Form options
-  const toneOptions = ["casual", "storytelling", "insightful", "bold"];
-  const typeOptions = ["story", "advice", "achievement", "mistake"];
+  // Tone options aimed at viral traction
+const toneOptions = [
+  "storytelling 📖",
+  "emotional ❤️",
+  "bold 💥",
+  "insightful 💡",
+  "funny 😂",
+  "motivational 🔥",
+  "direct 🎯",
+  "controversial ⚠️",
+  "relatable 😅",
+  "reflective 🤔"
+];
+
+// Post‑type options that map to proven viral formulas
+const typeOptions = [
+  "story 📘",            // hero & lesson arc
+  "lesson learned 📚",   // Jasmin/Lara frameworks
+  "hot take 🔥",         // contrarian view
+  "vulnerability 💔",    // fail or personal low point
+  "win 🏆",              // achievement with takeaway
+  "mistake ❌",          // what I’d avoid next time
+  "pivot 🔄",            // change in strategy
+  "advice 🧠",           // step‑by‑step tactic
+  "behind the scenes 🎬",
+  "audience question ❓" // designed to farm comments
+];
+
   const characterOptions = [
     { value: "600", label: "Approx. 600 characters" },
     { value: "900", label: "Approx. 900 characters" },

@@ -44,12 +44,11 @@ export function Hero({
       <div className="container mx-auto">
         <div className="flex flex-col items-center text-center space-y-4">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter">
-            The <span className="text-teal-500">LinkedIn</span> Post <br />{" "}
-            Generator That <br /> Works
+            The <span className="text-teal-500">LinkedIn</span> Growth <br />{" "}
+            Generator That <br /> Lasts
           </h1>
-          <p className="max-w-[700px] text-muted-foreground px-4 md:px-6">
-            After reaching 50 million views with it, Creative Studio made
-            SimpleGen public — the AI to write posts for LinkedIn.
+          <p className="max-w-[600px] text-muted-foreground px-4 md:px-6">
+          Think less, write better. This AI helps you draft LinkedIn posts and comments that actually get responses.
           </p>
           <Link href="/dashboard">
             <Button className="bg-teal-500 hover:bg-teal-600">

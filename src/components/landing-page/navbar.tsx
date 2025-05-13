@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SignOutButton, useUser } from "@clerk/nextjs";
+import { ModeToggle } from "../mode-toggle";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -83,6 +84,7 @@ export function Navbar() {
               Try SimpleGen
             </Button>
           </Link>
+          <ModeToggle />
         </nav>
 
         <div className="flex items-center gap-4 md:hidden">

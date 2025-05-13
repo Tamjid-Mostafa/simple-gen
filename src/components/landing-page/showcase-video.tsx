@@ -32,7 +32,7 @@ export function ShowcaseVideo() {
   const textTransform = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   return (
-    <div ref={ref} className="py-10 flex flex-col justify-center items-center ">
+    <div ref={ref} className="py-10 flex flex-col justify-center items-center">
       <Hero textTransform={textTransform} textOpacity={textOpacity} />
       <div className="[perspective:800px] md:px-40 px-12 w-full flex justify-center items-center">
         <motion.div

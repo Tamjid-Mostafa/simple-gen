@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
-import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SignOutButton, useUser } from "@clerk/nextjs";
@@ -13,9 +12,6 @@ export function Navbar() {
   const [showNav, setShowNav] = useState(true);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
-  const { user, isLoaded } = useUser();
-
-  console.log(user);
 
   // Lock body scroll when menu open
   useEffect(() => {
@@ -69,20 +65,21 @@ export function Navbar() {
           </Link>
           <Link href="/tools" className="text-sm font-medium">
             <span className="inline-block">Tools</span>
-            <span className="inline-block">Tools</span>
           </Link>
           <Link href="/subscribe" className="text-sm font-medium">
             <span className="inline-block">Subscribe</span>
           </Link>
-                                     <Link href="/login" className="text-sm font-medium">
+          <Link href="/dashboard" className="text-sm font-medium">
             Login
           </Link>
-          <Button
-            size="sm"
-            className="bg-teal-500 hover:bg-teal-600 border-2 border-primary"
-          >
-            Try SimpleGen
-          </Button>
+          <Link href="/sign-up">
+            <Button
+              size="sm"
+              className="bg-teal-500 hover:bg-teal-600 border-2 border-primary"
+            >
+              Try SimpleGen
+            </Button>
+          </Link>
         </nav>
 
         <div className="flex items-center gap-4 md:hidden">
@@ -125,33 +122,9 @@ export function Navbar() {
                 <Link href="/subscribe" onClick={() => setOpen(false)}>
                   Subscribe
                 </Link>
-                {!isLoaded ? (
-                  <>
-                    <div
-                      onClick={() => setOpen(false)}
-                      className="animate-pulse"
-                    >
-                      Loading
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {!user ? (
-                      <Link href="/sign-in" onClick={() => setOpen(false)}>
-                        Login
-                      </Link>
-                    ) : (
-                      <SignOutButton>
-                        <span
-                          onClick={() => setOpen(false)}
-                          className="cursor-pointer"
-                        >
-                          Logout
-                        </span>
-                      </SignOutButton>
-                    )}
-                  </>
-                )}
+                <Link href="/dashboard" onClick={() => setOpen(false)}>
+                  Login
+                </Link>
                 <Link href="/dashboard">
                   <Button
                     size="lg"

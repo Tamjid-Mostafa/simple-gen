@@ -7,12 +7,10 @@ declare type CreateUserParams = {
   firstName?: string;
   lastName?: string;
   photo?: string;
+  onboarding?: boolean;
   planId?: number;
   creditBalance?: number;
-  joinDate?: Date;
   membershipStatus?: "active" | "inactive" | "cancelled";
-  workoutPreferences?: string[];
-  nutritionGoals?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -23,12 +21,10 @@ declare type UpdateUserParams = {
   firstName?: string;
   lastName?: string;
   photo?: string;
+  onboarding?: boolean;
   planId?: number;
   creditBalance?: number;
-  joinDate?: Date;
   membershipStatus?: "active" | "inactive" | "cancelled";
-  workoutPreferences?: string[];
-  nutritionGoals?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };

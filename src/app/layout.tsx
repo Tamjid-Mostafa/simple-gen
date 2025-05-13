@@ -8,8 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SimpleGen - Your Best LinkedIn Post Generator Assistant",
-  description:
-    "A NextJS app with Clerk authentication and Tailwind CSS",
+  description: "A NextJS app with Clerk authentication and Tailwind CSS",
 };
 
 export default function RootLayout({
@@ -19,13 +18,13 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning={true}>
         <body className={inter.className}>
           <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
             <main className="">{children}</main>
           </ThemeProvider>

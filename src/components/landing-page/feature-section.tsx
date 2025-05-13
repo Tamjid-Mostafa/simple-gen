@@ -31,8 +31,8 @@ export function FeatureSection() {
               features for just $19.99/month — less than a cup of coffee to
               power your daily LinkedIn posts.
             </p>
-            <Link href="/dashboard">
-              <Button className="bg-teal-500 hover:bg-teal-600">
+            <Link href="/dashboard" className="">
+              <Button className="bg-teal-500 hover:bg-teal-600 mt-5">
                 Try SimpleGen Today
               </Button>
             </Link>

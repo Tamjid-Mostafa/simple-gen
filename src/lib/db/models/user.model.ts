@@ -7,6 +7,7 @@ export interface IUser {
   firstName?: string;
   lastName?: string;
   photo?: string;
+  onboarding?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -18,6 +19,7 @@ const UserSchema = new Schema({
   firstName: { type: String },
   lastName: { type: String },
   photo: { type: String },
+  onboarding: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModeToggle } from "../mode-toggle";
 import { SignOutButton, useUser } from "@clerk/nextjs";
+import { ModeToggle } from "../mode-toggle";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);

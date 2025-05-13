@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { PlayCircle } from "lucide-react";
-import { Button } from "../ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
+import LinkedInPostCardFooter from "./LinkedInPostCardFooter";
 
 export function LinkedInPostCard({
   post,
@@ -46,9 +46,7 @@ export function LinkedInPostCard({
           className="rounded-full w-12 h-12 object-cover"
         />
         <div className="flex flex-col justify-center">
-          <span className="font-semibold text-sm">
-            {post.author.name}
-          </span>
+          <span className="font-semibold text-sm">{post.author.name}</span>
           <span className="text-xs text-gray-400 leading-tight line-clamp-1">
             {post.author.title}
           </span>
@@ -65,30 +63,29 @@ export function LinkedInPostCard({
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className={cn(
-              "text-sm whitespace-pre-wrap overflow-hidden",
-              {
-                "line-clamp-3": !expanded && showMore,
-                "line-clamp-none": expanded,
-              }
-            )}
+            className={cn("text-sm whitespace-pre-wrap overflow-hidden")}
           >
-            {expanded || !showMore
-              ? content
-              : content.substring(0, 200).trim() + "..."}
+            <div className="space-y-2 text-sm outline-none border-none focus:outline-none focus:border-none whitespace-break-spaces">
+              {expanded || !showMore
+                ? content
+                : content.substring(0, 150).trim()}{" "}
+              <button
+                type="button"
+                onClick={() => setExpanded(!expanded)}
+                className={cn(
+                  "text-[#0a66c2] dark:text-[#71b7fb] hover:underline text-[15px]",
+                  {
+                    inline: !expanded,
+                    "block mt-2": expanded,
+                  }
+                )}
+              >
+                {" "}
+                {expanded ? "...less" : "...more"}
+              </button>
+            </div>
           </motion.p>
         </AnimatePresence>
-
-        {showMore && (
-          <Button
-            type="button"
-            variant="link"
-            onClick={() => setExpanded(!expanded)}
-            className="text-blue-600 text-sm mt-1 px-0"
-          >
-            {expanded ? "Show less" : "…more"}
-          </Button>
-        )}
       </div>
 
       {/* Post media */}
@@ -144,24 +141,7 @@ export function LinkedInPostCard({
       ) : null}
 
       {/* Footer actions */}
-      <div className="px-4 py-2 text-xs text-gray-400 border-t flex items-center gap-2">
-        <span className=" font-medium">1</span>
-        <span>· 2 Comments</span>
-      </div>
-      <div className="px-4 py-2 border-t flex justify-around text-sm text-gray-500">
-        <button className="pointer-events-none">
-          👍 Like
-        </button>
-        <button className="pointer-events-none">
-          💬 Comment
-        </button>
-        <button className="pointer-events-none">
-          🔗 Share
-        </button>
-        <button className="pointer-events-none">
-          📄 Transcript
-        </button>
-      </div>
+      <LinkedInPostCardFooter/>
     </motion.div>
   );
 }

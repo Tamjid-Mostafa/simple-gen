@@ -186,12 +186,7 @@ export default function GenerateComment() {
     authorName?: string
   ): string => {
     return `
-      Write a LinkedIn comment in response to the post below, following this structure:
-      
-      ➤ **Supporting Intro** — Start by agreeing with the post or showing enthusiasm about the author's perspective.
-      ➤ **Restating Content** — Briefly restate or summarize the key points from the post.
-      ➤ **Adding Additional Value or New Perspective** — Add your own insights, experiences, or perspective related to the post's topic.
-    
+      Write a LinkedIn comment in response to the post below:
       Post content:
       "${articleBody}"
       ${formData.wordCount ? `Limit the comment to: ${formData.wordCount}` : ""}
@@ -200,15 +195,12 @@ export default function GenerateComment() {
           ? "Include 1-3 relevant hashtags at the end."
           : "Do not include hashtags."
       }
-      
       Tone: ${formData.tone}
       ${
         formData.mentionAuthor && authorName
           ? `Make sure to mention the author: ${authorName}`
           : ""
       }
-      
-      The comment should feel natural, engaging, and not overly promotional or spammy. It should sound like a genuine person engaging with content they appreciate.
     `;
   };
 

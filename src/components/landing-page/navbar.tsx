@@ -127,33 +127,9 @@ export function Navbar() {
                 <Link href="/subscribe" onClick={() => setOpen(false)}>
                   Subscribe
                 </Link>
-                {!isLoaded ? (
-                  <>
-                    <div
-                      onClick={() => setOpen(false)}
-                      className="animate-pulse"
-                    >
-                      Loading
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {!user ? (
-                      <Link href="/sign-in" onClick={() => setOpen(false)}>
-                        Login
-                      </Link>
-                    ) : (
-                      <SignOutButton>
-                        <span
-                          onClick={() => setOpen(false)}
-                          className="cursor-pointer"
-                        >
-                          Logout
-                        </span>
-                      </SignOutButton>
-                    )}
-                  </>
-                )}
+                <Link href="/sign-in" onClick={() => setOpen(false)}>
+                  Login
+                </Link>
                 <Link href="/dashboard">
                   <Button
                     size="lg"

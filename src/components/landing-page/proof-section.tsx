@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useInView,
-  useAnimation,
-  AnimatePresence,
-} from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion, useInView, useAnimation } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Star, StarHalf } from "lucide-react";
-import Link from "next/link";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
-// Single array of reviews with all types
+// Import reviews from the provided file
 const reviews = [
   // Small reviews
   {
@@ -427,18 +422,28 @@ const AnimatedStars = ({ rating }: { rating: number }) => {
       {Array.from({ length: Math.floor(rating) }).map((_, i) => (
         <motion.div
           key={i}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 + i * 0.1 }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            duration: 0.4,
+            delay: 0.1 + i * 0.05,
+            type: "spring",
+            stiffness: 200,
+          }}
         >
           <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
         </motion.div>
       ))}
       {rating % 1 !== 0 && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 + Math.floor(rating) * 0.1 }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            duration: 0.4,
+            delay: 0.1 + Math.floor(rating) * 0.05,
+            type: "spring",
+            stiffness: 200,
+          }}
         >
           <StarHalf className="h-4 w-4 text-yellow-500 fill-yellow-500" />
         </motion.div>
@@ -469,7 +474,7 @@ const interleaveReviews = () => {
   return result;
 };
 
-// Elegant Review Card with Border Animation
+// Simple but gorgeous review card with elegant reveal animation
 const ReviewCard = ({
   review,
   index,
@@ -480,10 +485,9 @@ const ReviewCard = ({
   const cardRef = useRef(null);
   const inView = useInView(cardRef, {
     once: true,
-    amount: 0.2,
-    margin: "100px",
+    amount: 0.1,
+    margin: "50px",
   });
-  const [isHovered, setIsHovered] = useState(false);
 
   // Get background color using shadcn color palette
   const getBackgroundColor = (index: number) => {
@@ -499,31 +503,18 @@ const ReviewCard = ({
     return colors[index % colors.length];
   };
 
-  // Set height based on review type
+  // Set height based on review type - more flexible for mobile
   const getCardHeight = () => {
     switch (review.type) {
       case "small":
-        return "min-h-[150px]";
+        return "min-h-[120px] sm:min-h-[150px]";
       case "medium":
-        return "min-h-[250px]";
+        return "min-h-[200px] sm:min-h-[250px]";
       case "large":
-        return "min-h-[350px]";
+        return "min-h-[280px] sm:min-h-[350px]";
       default:
         return "";
     }
-  };
-
-  // Border animation variants
-  const borderVariants = {
-    hidden: { pathLength: 0, opacity: 0 },
-    visible: {
-      pathLength: 1,
-      opacity: 1,
-      transition: {
-        pathLength: { type: "spring", duration: 1.5, bounce: 0 },
-        opacity: { duration: 0.01 },
-      },
-    },
   };
 
   return (
@@ -531,94 +522,42 @@ const ReviewCard = ({
       ref={cardRef}
       className={`rounded-lg p-4 shadow-sm ${getBackgroundColor(
         index
-      )} break-inside-avoid mb-4 ${getCardHeight()} relative overflow-hidden`}
-      initial={{ opacity: 0, y: 20 }}
+      )} ${getCardHeight()} relative overflow-hidden backdrop-blur-sm mb-4 break-inside-avoid w-full inline-block`}
+      initial={{ opacity: 0, scale: 0.9 }}
       animate={
         inView
           ? {
               opacity: 1,
-              y: 0,
+              scale: 1,
               transition: {
-                duration: 0.6,
-                ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for elegant motion
-                delay: index * 0.03,
+                duration: 0.4,
+                ease: [0.34, 1.56, 0.64, 1],
+                delay: index * 0.02,
               },
             }
-          : { opacity: 0, y: 20 }
+          : { opacity: 0, scale: 0.9 }
       }
       whileHover={{
+        boxShadow: "0 10px 30px -5px rgba(0, 0, 0, 0.1)",
         y: -5,
         transition: {
           duration: 0.3,
-          ease: [0.22, 1, 0.36, 1],
+          ease: "easeOut",
         },
       }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
     >
-      {/* Animated border SVG */}
-      <div className="absolute inset-0 pointer-events-none">
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <motion.rect
-            x="0"
-            y="0"
-            width="100"
-            height="100"
-            rx="4"
-            strokeWidth="0.5"
-            stroke="currentColor"
-            className="text-primary/30"
-            variants={borderVariants}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-          />
-        </svg>
-      </div>
-
-      {/* Gradient overlay */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={
-          inView
-            ? {
-                opacity: 1,
-                transition: { delay: 0.3, duration: 0.8 },
-              }
-            : { opacity: 0 }
-        }
-      >
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{
-            background:
-              "linear-gradient(to right bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%)",
-          }}
-        />
-      </motion.div>
+      {/* Elegant gradient background */}
+      <div
+        className="absolute inset-0 opacity-30 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at ${
+            index % 2 === 0 ? "top right" : "bottom left"
+          }, var(--primary-50), transparent 70%)`,
+        }}
+      />
 
       {/* Content with elegant fade-in */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={
-          inView
-            ? {
-                opacity: 1,
-                transition: {
-                  delay: 0.5 + index * 0.05,
-                  duration: 0.8,
-                  ease: [0.22, 1, 0.36, 1],
-                },
-              }
-            : { opacity: 0 }
-        }
-      >
+      <div className="relative z-10">
         <AnimatedStars rating={review.rating} />
 
         <motion.p
@@ -629,9 +568,8 @@ const ReviewCard = ({
               ? {
                   opacity: 1,
                   transition: {
-                    delay: 0.1 + index * 0.01,
-                    duration: 0.8,
-                    ease: [0.22, 1, 0.36, 1],
+                    delay: 0.15,
+                    duration: 0.3,
                   },
                 }
               : { opacity: 0 }
@@ -640,53 +578,54 @@ const ReviewCard = ({
           {review.content}
         </motion.p>
 
-        <motion.p
-          className="text-xs font-semibold"
-          initial={{ opacity: 0 }}
+        <motion.div
+          className="flex items-center mt-3"
+          initial={{ opacity: 0, x: -10 }}
           animate={
             inView
               ? {
                   opacity: 1,
+                  x: 0,
                   transition: {
-                    delay: 0.2 + index * 0.01,
-                    duration: 0.8,
-                    ease: [0.22, 1, 0.36, 1],
+                    delay: 0.2,
+                    duration: 0.3,
                   },
                 }
-              : { opacity: 0 }
+              : { opacity: 0, x: -10 }
           }
         >
-          {review.name}
-        </motion.p>
-      </motion.div>
+          <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium text-primary">
+            {review.name.charAt(0)}
+          </div>
+          <p className="text-xs font-semibold ml-2">{review.name}</p>
+        </motion.div>
+      </div>
 
-      {/* Elegant highlight effect */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%)",
-              }}
-              animate={{
-                left: ["-100%", "100%"],
-              }}
-              transition={{
-                duration: 1.5,
-                ease: "easeInOut",
-              }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Subtle corner accent */}
+      <motion.div
+        className="absolute top-0 right-0 w-12 h-12 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={
+          inView
+            ? {
+                opacity: 0.5,
+                transition: {
+                  delay: 0.25,
+                  duration: 0.3,
+                },
+              }
+            : { opacity: 0 }
+        }
+      >
+        <div
+          className="absolute top-0 right-0 w-12 h-12 overflow-hidden"
+          style={{
+            clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+            background:
+              "linear-gradient(135deg, var(--primary-300), transparent)",
+          }}
+        />
+      </motion.div>
     </motion.div>
   );
 };
@@ -695,6 +634,7 @@ export function ProofSection() {
   const controls = useAnimation();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.1 });
+  const isMobile = useMediaQuery("(max-width: 640px)");
 
   useEffect(() => {
     if (inView) {
@@ -705,104 +645,107 @@ export function ProofSection() {
   // Get interleaved reviews for better visual distribution
   const interleavedReviews = interleaveReviews();
 
+  // For mobile, limit the number of reviews to improve performance
+  const displayedReviews = isMobile
+    ? interleavedReviews.slice(0, 10)
+    : interleavedReviews;
+
   return (
     <section className="py-12 md:py-16 overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
         <motion.div
           className="text-center mb-10"
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
-            y: 0,
             transition: {
-              duration: 0.8,
-              ease: [0.22, 1, 0.36, 1],
+              duration: 0.5,
             },
           }}
         >
-          <motion.h2
-            className="text-2xl md:text-3xl font-bold"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              transition: {
-                delay: 0.2,
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              },
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
           >
-            In case you need more{" "}
-            <motion.span
-              className="text-teal-500 inline-block"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: 1,
-                transition: {
-                  delay: 0.4,
-                  duration: 0.8,
-                  ease: [0.22, 1, 0.36, 1],
-                },
-              }}
-            >
-              proof
-            </motion.span>
-            .
-          </motion.h2>
+            <h2 className="text-2xl md:text-3xl font-bold">
+              In case you need more{" "}
+              <span className="text-teal-500 relative">
+                proof
+                <motion.span
+                  className="absolute -bottom-1 left-0 w-full h-[3px] bg-teal-500 rounded-full"
+                  initial={{ scaleX: 0, originX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                />
+              </span>
+              .
+            </h2>
+          </motion.div>
 
           <motion.p
             className="text-muted-foreground mt-2"
             initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              transition: {
-                delay: 0.6,
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              },
-            }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
-            We're grateful for our SimpleGen community.
+            We're grateful for our LinkedBoost community.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              transition: {
-                delay: 0.8,
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              },
-            }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <Link href="/dashboard">
-              <Button className="bg-teal-500 hover:bg-teal-600 mt-4">
-                Try SimpleGen Today
-              </Button>
-            </Link>
+            <Button className="bg-teal-500 hover:bg-teal-600 mt-4">
+              Try LinkedBoost Today
+            </Button>
           </motion.div>
         </motion.div>
 
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0 }}
-          animate={controls}
-          variants={{
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.3,
+        {isMobile ? (
+          // Mobile view - simple stack layout
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0 }}
+            animate={controls}
+            variants={{
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.03,
+                  delayChildren: 0.1,
+                },
               },
-            },
-          }}
-          className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4"
-        >
-          {interleavedReviews.map((review, index) => (
-            <ReviewCard key={review.id} review={review} index={index} />
-          ))}
-        </motion.div>
+            }}
+            className="space-y-4"
+          >
+            {displayedReviews.map((review, index) => (
+              <ReviewCard key={review.id} review={review} index={index} />
+            ))}
+          </motion.div>
+        ) : (
+          // Desktop view - masonry layout
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0 }}
+            animate={controls}
+            variants={{
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.03,
+                  delayChildren: 0.1,
+                },
+              },
+            }}
+            className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4"
+          >
+            {displayedReviews.map((review, index) => (
+              <ReviewCard key={review.id} review={review} index={index} />
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );

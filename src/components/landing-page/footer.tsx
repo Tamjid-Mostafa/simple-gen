@@ -6,7 +6,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="mb-4 md:mb-0">
           <div className="flex items-center">
-            <div className="border border-white px-2 py-1 text-xs">Design by Creative Studio</div>
+            <div className="border border-white px-2 py-1 text-xs">Design by UI Streams</div>
           </div>
           <div className="mt-2 text-sm text-slate-400">
             © 2025 SimpleGen. All Rights Reserved.

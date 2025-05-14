@@ -34,7 +34,7 @@ export function NavMain({
   }[];
 }) {
   const {pending} = useLinkStatus();
-  console.log(pending);
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel></SidebarGroupLabel>

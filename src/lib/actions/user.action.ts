@@ -5,15 +5,14 @@ import { revalidatePath } from "next/cache";
 import { handleError } from "../utils";
 import { connectDB } from "../db/connect";
 import User from "../db/models/user.model";
-import { IUser } from "@/types/user";
+import { IUser, UserCreateInput, UserUpdateInput } from "@/types/user";
 
 // CREATE
-export async function createUser(user: IUser): Promise<IUser | null> {
+export async function createUser(user: UserCreateInput): Promise<IUser | null> {
   try {
     await connectDB();
 
     const newUser = await User.create(user);
-    console.log("Created USer:", JSON.parse(JSON.stringify(newUser)));
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     handleError(error);
@@ -62,7 +61,7 @@ export async function getAllUsers() {
 }
 
 // UPDATE
-export async function updateUser(clerkId: string, user: IUser) {
+export async function updateUser(clerkId: string, user: UserUpdateInput) {
   try {
     await connectDB();
 

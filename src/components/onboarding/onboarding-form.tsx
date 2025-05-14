@@ -63,7 +63,7 @@ export default function OnboardingFlow() {
     return !value || value.trim() === "";
   };
 
-  const page = "onboarding";
+  const page = "account" as "onboarding" | "account";
   return (
     <>
       {page === "onboarding" ? (
@@ -72,7 +72,7 @@ export default function OnboardingFlow() {
             <CardTitle className="text-xl">
               {getStepTitle(currentKey)}
             </CardTitle>
-            <CardDescription className="text-zinc-400 text-sm">
+            <CardDescription className=" text-sm">
               {getStepDescription(currentKey)}
             </CardDescription>
           </CardHeader>
@@ -158,84 +158,98 @@ export default function OnboardingFlow() {
           </CardContent>
         </Card>
       ) : (
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <CardTitle className=" text-xl">
-              {getStepTitle(currentKey)}
-            </CardTitle>
-            <CardDescription className="text-zinc-400 text-sm">
-              {getStepDescription(currentKey)}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {ONBOARDING_OPTIONS[currentKey] ? (
-              <>
-                {ONBOARDING_OPTIONS[currentKey].map((item) => {
-                  const label = typeof item === "string" ? item : item.label;
-                  const description =
-                    typeof item === "string" ? null : item.description;
+        <div>
+          {ONBOARDING_STEPS.map((step, index) => {
+            return (
+              <div key={index} className="flex flex-col gap-2">
+                <Card className="max-w-2xl mx-auto">
+                  <CardHeader>
+                    <CardTitle className=" text-xl">
+                      {getStepTitle(step)}
+                    </CardTitle>
+                    <CardDescription className=" text-sm">
+                      {getStepDescription(step)}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {ONBOARDING_OPTIONS[step] ? (
+                      <>
+                        {ONBOARDING_OPTIONS[step].map((item) => {
+                          const label =
+                            typeof item === "string" ? item : item.label;
+                          const description =
+                            typeof item === "string" ? null : item.description;
 
-                  return (
-                    <Label key={label} className="flex items-center gap-2">
-                      <Checkbox
-                        checked={formData[currentKey]?.includes(label)}
-                        onCheckedChange={() => handleChange(label)}
+                          return (
+                            <Label
+                              key={label}
+                              className="flex items-center gap-2"
+                            >
+                              <Checkbox
+                                checked={formData[step]?.includes(label)}
+                                onCheckedChange={() => handleChange(label)}
+                              />
+                              <div className="flex flex-col text-left">
+                                <span className="font-medium">{label}</span>
+                                {description && (
+                                  <span className="text-muted-foreground text-sm">
+                                    {description}
+                                  </span>
+                                )}
+                              </div>
+                            </Label>
+                          );
+                        })}
+                        <div className="flex gap-2 items-center pt-4">
+                          <Input
+                            value={other}
+                            onChange={(e) => setOther(e.target.value)}
+                            placeholder="Other (Please Specify)"
+                          />
+                          <Button
+                            type="button"
+                            onClick={handleOtherAdd}
+                            variant="secondary"
+                          >
+                            Add
+                          </Button>
+                        </div>
+                      </>
+                    ) : step === "fineTuning" || step === "cta" ? (
+                      <Textarea
+                        placeholder={
+                          step === "fineTuning"
+                            ? "Helping people to make great website. I am a self taught Developer."
+                            : "Enter your CTA modifications..."
+                        }
+                        value={formData[step] || ""}
+                        onChange={(e) =>
+                          handleTextInput(step, e.target.value)
+                        }
                       />
-                      <div className="flex flex-col text-left">
-                        {/* <span className="font-medium">{label}</span> */}
-                        {description && (
-                          <span className="text-muted-foreground text-sm">
-                            {description}
-                          </span>
-                        )}
-                      </div>
-                    </Label>
-                  );
-                })}
-                <div className="flex gap-2 items-center pt-4">
-                  <Input
-                    value={other}
-                    onChange={(e) => setOther(e.target.value)}
-                    placeholder="Other (Please Specify)"
-                  />
-                  <Button
-                    type="button"
-                    onClick={handleOtherAdd}
-                    variant="secondary"
-                  >
-                    Add
-                  </Button>
-                </div>
-              </>
-            ) : currentKey === "fineTuning" || currentKey === "cta" ? (
-              <Textarea
-                placeholder={
-                  currentKey === "fineTuning"
-                    ? "Helping people to make great website. I am a self taught Developer."
-                    : "Enter your CTA modifications..."
-                }
-                value={formData[currentKey] || ""}
-                onChange={(e) => handleTextInput(currentKey, e.target.value)}
-              />
-            ) : null}
+                    ) : null}
 
-            <div className="pt-4 flex justify-end">
-              <Button
-                onClick={handleNext}
-                disabled={isLastStep}
-                className="bg-teal-600 hover:bg-teal-700 "
-              >
-                {isLastStep ? "Finish" : "Next"}
-              </Button>
-            </div>
+                    <div className="pt-4 flex justify-end">
+                      <Button
+                        onClick={handleNext}
+                        disabled={isLastStep}
+                        className="bg-teal-600 hover:bg-teal-700 "
+                      >
+                        {isLastStep ? "Finish" : "Next"}
+                      </Button>
+                    </div>
 
-            {isLastStep && (
-              <pre className="mt-6 p-4 bg-zinc-800 rounded text-sm ">
-                {JSON.stringify(formData, null, 2)}
-              </pre>
-            )}
-          </CardContent>
-        </Card>
+                    {isLastStep && (
+                      <pre className="mt-6 p-4 bg-zinc-800 rounded text-sm ">
+                        {JSON.stringify(formData, null, 2)}
+                      </pre>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
       )}
     </>
   );

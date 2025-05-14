@@ -13,22 +13,24 @@ export function SidebarBrand() {
   return (
     <SidebarMenu>
       <SidebarMenuItem
-        className={cn("flex items-center gap-2 transition-all duration-300", {
+        className={cn("flex items-center pt-4 gap-2 transition-all duration-300", {
           "px-2": state !== "collapsed",
         })}
       >
         <Link href="/">
-          <Bot size={40} />
+          <div className="rounded-md bg-teal-500 flex justify-center items-center w-8 h-8 border-2 border-primary">
+            S
+          </div>
         </Link>
         <span
           className={cn(
-            "text-md text-primary mt-2 overflow-hidden whitespace-nowrap transition-all duration-300",
+            "text-md text-primary overflow-hidden whitespace-nowrap transition-all duration-300",
             {
               "size-0": state === "collapsed",
             }
           )}
         >
-          Simple Gen AI
+          SimpleGen
         </span>
       </SidebarMenuItem>
     </SidebarMenu>

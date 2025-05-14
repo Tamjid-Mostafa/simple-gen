@@ -109,8 +109,11 @@ export function Navbar() {
               transition={{ type: "spring", stiffness: 300, damping: 35 }}
               className="fixed inset-0 bg-secondary z-50 flex justify-center items-center min-h-screen"
             >
+              <div className="absolute top-6 right-1/2 translate-x-1/2">
+                <ModeToggle />
+              </div>
               <button
-                className="absolute top-6 right-6 text-white"
+                className="absolute top-6 right-[75px]"
                 onClick={() => setOpen(false)}
               >
                 <X size={28} />

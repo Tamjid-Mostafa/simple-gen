@@ -34,3 +34,8 @@ export interface IUser {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export type UserDocument = IUser;
+
+export type UserCreateInput = Partial<Omit<IUser, "createdAt" | "updatedAt">>;
+
+export type UserUpdateInput = Partial<UserCreateInput>;

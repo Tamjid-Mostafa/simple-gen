@@ -20,7 +20,7 @@ export function SidebarFooterUser() {
               userButtonBox:
                 "text-sm py-2 px-[5px] rounded-md flex-row-reverse",
               avatarBox: "border-2 border-white rounded-full",
-              userButtonOuterIdentifier: `whitespace-nowrap `,
+              userButtonOuterIdentifier: `whitespace-nowrap dark:text-white`,
             },
           }}
           showName

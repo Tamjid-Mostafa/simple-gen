@@ -4,12 +4,12 @@ import { revalidatePath } from "next/cache";
 
 import { handleError } from "../utils";
 import { connectDB } from "../db/connect";
-import User, { IUser } from "../db/models/user.model";
+import User from "../db/models/user.model";
+import { IUser } from "@/types/user";
 
 // CREATE
-export async function createUser(user: CreateUserParams) {
+export async function createUser(user: IUser): Promise<IUser | null> {
   try {
-    console.log("Creating user...", (await connectDB()).connection.name);
     await connectDB();
 
     const newUser = await User.create(user);
@@ -17,11 +17,12 @@ export async function createUser(user: CreateUserParams) {
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     handleError(error);
+    return null;
   }
 }
 
 // READ
-export async function getUserById(userId: string) {
+export async function getUserById(userId: string): Promise<IUser | null> {
   try {
     await connectDB();
 
@@ -32,6 +33,7 @@ export async function getUserById(userId: string) {
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     handleError(error);
+    return null;
   }
 }
 export async function getUserByUsername(username: string) {
@@ -52,7 +54,6 @@ export async function getAllUsers() {
   try {
     await connectDB();
     const users = await User.find();
-    console.log("Getting user...", (await connectDB()).connection.name);
     if (!users) throw new Error("User not found");
     return JSON.parse(JSON.stringify(users));
   } catch (error) {
@@ -61,7 +62,7 @@ export async function getAllUsers() {
 }
 
 // UPDATE
-export async function updateUser(clerkId: string, user: UpdateUserParams) {
+export async function updateUser(clerkId: string, user: IUser) {
   try {
     await connectDB();
 
@@ -112,9 +113,8 @@ export async function getFilteredUsers(query: QueryParams) {
       return {
         ...user.toObject(),
         _id: user._id.toString(), // Convert ObjectId to string
-        joinDate: user.joinDate ? user.joinDate.toISOString() : null, // Convert dates to strings
-        createdAt: user.createdAt ? user.createdAt.toISOString() : null, // Convert dates to strings
-        updatedAt: user.updatedAt ? user.updatedAt.toISOString() : null, // Convert dates to strings
+        createdAt: user.createdAt ? user.createdAt.toISOString() : null,
+        updatedAt: user.updatedAt ? user.updatedAt.toISOString() : null,
       };
     });
 
@@ -171,3 +171,83 @@ export async function updateCredits(userId: string, creditFee: number) {
     handleError(error);
   }
 }
+
+// export async function normalizeUsers() {
+//   try {
+//     const users = await User.find({});
+
+//     for (const user of users) {
+//       let updated = false;
+
+//       // Add missing top-level flags
+//       if (user.hasOnboard === undefined) {
+//         user.hasOnboard = false;
+//         updated = true;
+//       }
+
+//       if (user.isAdmin === undefined) {
+//         user.isAdmin = false;
+//         updated = true;
+//       }
+
+//       if (user.hasActiveSubscription === undefined) {
+//         user.hasActiveSubscription = false;
+//         updated = true;
+//       }
+
+//       // Add or normalize account
+//       if (!user.account) {
+//         user.account = {
+//           imageCredits: 0,
+//           postCredits: 0,
+//           subscription: null,
+//         };
+//         updated = true;
+//       }
+
+//       // Add or normalize settings
+//       if (!user.settings) {
+//         user.settings = {
+//           headline: null,
+//           shareContent: [],
+//           postPurpose: [],
+//           writingStyle: [],
+//           industry: [],
+//           jobDescription: [],
+//           fineTuning: "",
+//           cta: null,
+//           topics: [],
+//           createdAt: new Date(),
+//           updatedAt: new Date(),
+//         };
+//         updated = true;
+//       } else {
+//         // Ensure all keys exist (for partially filled settings)
+//         const s = user.settings;
+
+//         if (s.headline === undefined) s.headline = null;
+//         if (!Array.isArray(s.shareContent)) s.shareContent = [];
+//         if (!Array.isArray(s.postPurpose)) s.postPurpose = [];
+//         if (!Array.isArray(s.writingStyle)) s.writingStyle = [];
+//         if (!Array.isArray(s.industry)) s.industry = [];
+//         if (!Array.isArray(s.jobDescription)) s.jobDescription = [];
+//         if (s.fineTuning === undefined) s.fineTuning = "";
+//         if (s.cta === undefined) s.cta = null;
+//         if (!Array.isArray(s.topics)) s.topics = [];
+//         if (!s.createdAt) s.createdAt = new Date();
+//         if (!s.updatedAt) s.updatedAt = new Date();
+
+//         updated = true;
+//       }
+
+//       if (updated) {
+//         await user.save();
+//         console.log(`✅ Updated user: ${user.email}`);
+//       }
+//     }
+
+//     console.log("🎉 All users normalized successfully.");
+//   } catch (error) {
+//     console.error("❌ Failed to normalize users:", error);
+//   }
+// }

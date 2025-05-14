@@ -12,7 +12,7 @@ export default async function DashboardLayout({
 }) {
   const { userId } = await auth();
   const user = await getUserById(userId as string);
-  console.log(user);
+  console.log("user", user);
 
   return (
     <SidebarProvider>

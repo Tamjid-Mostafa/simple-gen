@@ -87,13 +87,14 @@ export async function POST(req: Request) {
 
   // UPDATE
   if (eventType === "user.updated") {
-    const { id, image_url, first_name, last_name, username } = evt.data;
+    const { id, image_url, first_name, last_name, username, public_metadata } = evt.data;
 
     const user = {
       firstName: first_name || "",
       lastName: last_name || "",
       username: username!,
       photo: image_url,
+      hasOnboard: public_metadata?.hasOnboard as boolean,
     };
 
     const updatedUser = await updateUser(id, user);

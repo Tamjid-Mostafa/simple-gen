@@ -22,18 +22,20 @@ import {
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { updateUser } from "@/lib/actions/user.action";
-import { useAuth } from "@clerk/clerk-react";
 import { UserSettings } from "@/types/user";
+import { completeOnboarding } from "@/app/onboarding/_actions";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function Onboarding() {
-  const { userId } = useAuth();
-  console.log(userId);
+  const { user } = useUser();
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [otherValues, setOtherValues] = useState<Record<string, string>>({});
   const [dynamicOptions, setDynamicOptions] = useState<
     Record<string, string[]>
   >({});
+  const router = useRouter();
   const filteredSteps = ONBOARDING_STEPS.filter((step) => step !== "cta");
   const currentKey = filteredSteps[step];
   const isLastStep = step === filteredSteps.length - 1;
@@ -86,10 +88,14 @@ export default function Onboarding() {
       });
       const { data }: { data: UserSettings } = res.data;
 
-      await updateUser(userId as string, {
+      await updateUser(user?.id as string, {
         hasOnboard: true,
         settings: data,
       });
+      await completeOnboarding();
+      console.log("User metadata updated");
+      await user?.reload();
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error during onboarding finish:", error);
     }

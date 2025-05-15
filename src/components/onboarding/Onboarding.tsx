@@ -160,7 +160,7 @@ export default function Onboarding() {
               </Button>
             </div>
           </>
-        ) : currentKey === "fineTuning" || currentKey === "cta" ? (
+        ) : currentKey === "fineTuning" ? (
           <Textarea
             placeholder={
               currentKey === "fineTuning"

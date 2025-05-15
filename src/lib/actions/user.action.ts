@@ -35,6 +35,7 @@ export async function getUserById(userId: string): Promise<IUser | null> {
     return null;
   }
 }
+
 export async function getUserByUsername(username: string) {
   try {
     await connectDB();

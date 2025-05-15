@@ -20,15 +20,23 @@ import {
   getStepDescription,
 } from "@/constants/onboarding";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { updateUser } from "@/lib/actions/user.action";
+import { useAuth } from "@clerk/clerk-react";
+import { UserSettings } from "@/types/user";
 
 export default function Onboarding() {
+  const { userId } = useAuth();
+  console.log(userId);
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [otherValues, setOtherValues] = useState<Record<string, string>>({});
-  const [dynamicOptions, setDynamicOptions] = useState<Record<string, string[]>>({});
-
-  const currentKey = ONBOARDING_STEPS[step];
-  const isLastStep = step === ONBOARDING_STEPS.length - 1;
+  const [dynamicOptions, setDynamicOptions] = useState<
+    Record<string, string[]>
+  >({});
+  const filteredSteps = ONBOARDING_STEPS.filter((step) => step !== "cta");
+  const currentKey = filteredSteps[step];
+  const isLastStep = step === filteredSteps.length - 1;
   const isFirstStep = step === 0;
 
   const handleNext = () => {
@@ -71,6 +79,21 @@ export default function Onboarding() {
     }
     return !value || value.trim() === "";
   };
+  const handleFinish = async () => {
+    try {
+      const res = await axios.post("/api/onboard-user", {
+        ...formData,
+      });
+      const { data }: { data: UserSettings } = res.data;
+
+      await updateUser(userId as string, {
+        hasOnboard: true,
+        settings: data,
+      });
+    } catch (error) {
+      console.error("Error during onboarding finish:", error);
+    }
+  };
 
   return (
     <Card className="max-w-lg mx-auto border-none w-full shadow-none">
@@ -83,37 +106,42 @@ export default function Onboarding() {
       <CardContent className="space-y-4">
         {ONBOARDING_OPTIONS[currentKey] || dynamicOptions[currentKey] ? (
           <>
-            {[...(ONBOARDING_OPTIONS[currentKey] || []), ...(dynamicOptions[currentKey] || [])].map(
-              (item) => {
-                const label = typeof item === "string" ? item : item.label;
-                const description = typeof item === "string" ? null : item.description;
+            {[
+              ...(ONBOARDING_OPTIONS[currentKey] || []),
+              ...(dynamicOptions[currentKey] || []),
+            ].map((item) => {
+              const label = typeof item === "string" ? item : item.label;
+              const description =
+                typeof item === "string" ? null : item.description;
 
-                return (
-                  <Label
-                    key={label}
-                    className="flex flex-row justify-between items-center gap-4 border px-4 py-3 rounded-lg hover:bg-accent"
-                  >
-                    <div className="flex flex-col text-left">
-                      <span className="font-medium">{label}</span>
-                      {description && (
-                        <span className="text-muted-foreground text-xs">
-                          {description}
-                        </span>
-                      )}
-                    </div>
-                    <Checkbox
-                      checked={formData[currentKey]?.includes(label)}
-                      onCheckedChange={() => handleChange(currentKey, label)}
-                    />
-                  </Label>
-                );
-              }
-            )}
+              return (
+                <Label
+                  key={label}
+                  className="flex flex-row justify-between items-center gap-4 border px-4 py-3 rounded-lg hover:bg-accent"
+                >
+                  <div className="flex flex-col text-left">
+                    <span className="font-medium">{label}</span>
+                    {description && (
+                      <span className="text-muted-foreground text-xs">
+                        {description}
+                      </span>
+                    )}
+                  </div>
+                  <Checkbox
+                    checked={formData[currentKey]?.includes(label)}
+                    onCheckedChange={() => handleChange(currentKey, label)}
+                  />
+                </Label>
+              );
+            })}
             <div className="flex gap-2 items-center pt-4">
               <Input
                 value={otherValues[currentKey] || ""}
                 onChange={(e) =>
-                  setOtherValues((prev) => ({ ...prev, [currentKey]: e.target.value }))
+                  setOtherValues((prev) => ({
+                    ...prev,
+                    [currentKey]: e.target.value,
+                  }))
                 }
                 placeholder="Other (Please Specify)"
               />
@@ -147,13 +175,22 @@ export default function Onboarding() {
           >
             Previous
           </Button>
-          <Button
-            onClick={handleNext}
-            disabled={isContinueDisabled()}
-            className="bg-teal-600 hover:bg-teal-700 w-full"
-          >
-            {isLastStep ? "Finish" : "Continue"}
-          </Button>
+          {isLastStep ? (
+            <Button
+              onClick={handleFinish}
+              className="bg-teal-600 hover:bg-teal-700 w-full"
+            >
+              Finish
+            </Button>
+          ) : (
+            <Button
+              onClick={handleNext}
+              disabled={isContinueDisabled()}
+              className="bg-teal-600 hover:bg-teal-700 w-full"
+            >
+              Continue
+            </Button>
+          )}
         </div>
 
         {isLastStep && (

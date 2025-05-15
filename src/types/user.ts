@@ -5,7 +5,7 @@ export interface UserAccount {
 }
 
 export interface UserSettings {
-  headline: string | null;
+  // headline: string | null;
   shareContent: string[];
   postPurpose: string[];
   writingStyle: string[];

@@ -123,7 +123,7 @@ export default function Onboarding() {
               return (
                 <Label
                   key={label}
-                  className="flex flex-row justify-between items-center gap-4 border px-4 py-3 rounded-lg hover:bg-accent"
+                  className="flex flex-row justify-between items-center gap-4 border px-4 py-3 rounded-lg hover:bg-accent cursor-pointer"
                 >
                   <div className="flex flex-col text-left">
                     <span className="font-medium">{label}</span>

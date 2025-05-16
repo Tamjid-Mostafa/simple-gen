@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import {
-  ChevronLeft, Home, MessagesSquare,
+  ChevronLeft, Home, MessagesSquare, Settings,
 } from "lucide-react";
 import { SidebarBrand } from "./sidebar-brand";
 import { SidebarFooterUser } from "./sidebar-footer-user";
@@ -27,8 +27,12 @@ const navItems = [
     title: "Comment",
     url: "/dashboard/comment",
     icon: MessagesSquare
+  },
+  {
+    title: "Settings",
+    url: "/dashboard/settings",
+    icon: Settings,
   }
-
 ];
 
 export function AppSidebar() {

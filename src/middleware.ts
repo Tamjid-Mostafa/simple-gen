@@ -9,6 +9,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/webhooks/stripe",
   "/blog/(.*)",
   "/tools/(.*)",
+  "/api/onboard-user",
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
@@ -18,7 +19,8 @@ export default clerkMiddleware(async (auth, request) => {
     if (
       userId &&
       !sessionClaims?.metadata?.hasOnboard &&
-      request.nextUrl.pathname !== "/onboarding"
+      request.nextUrl.pathname !== "/onboarding" && 
+      !request.nextUrl.pathname.startsWith("/api/onboard-user")
     ) {
       // 👉 If the user not onboard complete, redirect them to the onboarding
       return NextResponse.redirect(new URL("/onboarding", request.url));

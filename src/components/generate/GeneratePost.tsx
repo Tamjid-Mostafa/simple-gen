@@ -186,7 +186,7 @@ const typeOptions = [
       <Card className="w-full">
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-2xl font-bold">
-            LinkedIn Post Generator
+            Generate Post
           </CardTitle>
         </CardHeader>
         <CardContent>

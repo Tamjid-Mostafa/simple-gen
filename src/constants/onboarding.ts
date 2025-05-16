@@ -83,7 +83,7 @@ export function getStepTitle(step: string): string {
     case "jobDescription":
       return "What is your job description?";
     case "fineTuning":
-      return "Fine tune your EasyGen";
+      return "Fine tune your SimpleGen";
     case "cta":
       return "Modify post CTA";
     default:

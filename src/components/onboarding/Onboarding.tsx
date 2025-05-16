@@ -26,6 +26,8 @@ import { UserSettings } from "@/types/user";
 import { completeOnboarding } from "@/app/onboarding/_actions";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function Onboarding() {
   const { user } = useUser();
@@ -35,6 +37,9 @@ export default function Onboarding() {
   const [dynamicOptions, setDynamicOptions] = useState<
     Record<string, string[]>
   >({});
+  const [status, setStatus] = useState<"idle" | "onboarding" | "completed">("idle");
+
+  
   const router = useRouter();
   const filteredSteps = ONBOARDING_STEPS.filter((step) => step !== "cta");
   const currentKey = filteredSteps[step];
@@ -82,6 +87,7 @@ export default function Onboarding() {
     return !value || value.trim() === "";
   };
   const handleFinish = async () => {
+    setStatus("onboarding");
     try {
       const res = await axios.post("/api/onboard-user", {
         ...formData,
@@ -96,6 +102,7 @@ export default function Onboarding() {
       console.log("User metadata updated");
       await user?.reload();
       router.push("/dashboard");
+      setStatus("completed");
     } catch (error) {
       console.error("Error during onboarding finish:", error);
     }
@@ -182,12 +189,31 @@ export default function Onboarding() {
             Previous
           </Button>
           {isLastStep ? (
-            <Button
-              onClick={handleFinish}
-              className="bg-teal-600 hover:bg-teal-700 w-full"
-            >
-              Finish
-            </Button>
+             <Button
+             onClick={handleFinish}
+             disabled={status !== "idle" && status !== "completed"}
+             className="bg-teal-600 hover:bg-teal-700 w-full relative"
+           >
+             <AnimatePresence mode="wait">
+               <motion.span
+                 key={status}
+                 initial={{ y: 20, opacity: 0 }}
+                 animate={{ y: 0, opacity: 1 }}
+                 exit={{ y: -20, opacity: 0 }}
+                 transition={{ duration: 0.3 }}
+                 className="absolute inset-0 flex items-center justify-center"
+               >
+                 {status === "idle" && "Finish"}
+                 {status === "onboarding" && (
+                   <>
+                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                     Completing...
+                   </>
+                 )}
+                 {status === "completed" && "Done!"}
+               </motion.span>
+             </AnimatePresence>
+           </Button>
           ) : (
             <Button
               onClick={handleNext}
@@ -199,11 +225,11 @@ export default function Onboarding() {
           )}
         </div>
 
-        {isLastStep && (
+        {/* {isLastStep && (
           <pre className="mt-6 p-4 bg-zinc-800 rounded text-sm">
             {JSON.stringify(formData, null, 2)}
           </pre>
-        )}
+        )} */}
       </CardContent>
     </Card>
   );

@@ -372,7 +372,7 @@ export default function GenerateComment() {
                 )}
 
                 <AnimatePresence mode="wait">
-                  <motion.div
+                  <motion.span
                     key={status}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -384,7 +384,7 @@ export default function GenerateComment() {
                     {status === "fetching" && "Getting Post..."}
                     {status === "generating" && "Creating Comment..."}
                     {status === "done" && "Done!"}
-                  </motion.div>
+                  </motion.span>
                 </AnimatePresence>
               </Button>
 

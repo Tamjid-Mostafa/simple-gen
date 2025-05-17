@@ -28,6 +28,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { saveLocalSettings } from "@/utils/localSettings";
 
 export default function Onboarding() {
   const { user } = useUser();
@@ -86,28 +87,45 @@ export default function Onboarding() {
     }
     return !value || value.trim() === "";
   };
+
   const handleFinish = async () => {
     setStatus("onboarding");
+  
     try {
-      const res = await axios.post("/api/onboard-user", {
-        ...formData,
+      // 1. Call OpenAI API to generate topics
+      const res = await fetch("/api/onboard-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-      const { data }: { data: UserSettings } = res.data;
-
+  
+      const json = await res.json();
+      const { data }: { data: UserSettings } = json;
+  
+      // 2. Save to LocalStorage
+      saveLocalSettings(data);
+  
+      // 3. Save to MongoDB via server action
       await updateUser(user?.id as string, {
         hasOnboard: true,
         settings: data,
       });
+  
+      // 4. Optionally update Clerk metadata
       await completeOnboarding();
-      console.log("User metadata updated");
+  
+      // 5. Force reload Clerk user
       await user?.reload();
+  
+      // 6. Redirect
       router.push("/dashboard");
       setStatus("completed");
     } catch (error) {
       console.error("Error during onboarding finish:", error);
+      setStatus("idle");
     }
   };
-
+  
   return (
     <Card className="max-w-lg mx-auto border-none w-full shadow-none">
       <CardHeader>

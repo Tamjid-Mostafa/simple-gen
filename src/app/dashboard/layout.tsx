@@ -10,10 +10,6 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-  const user = await getUserById(userId as string);
-  console.log("user", user);
-
   return (
     <SidebarProvider>
       <AppSidebar />

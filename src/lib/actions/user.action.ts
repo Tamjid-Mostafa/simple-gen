@@ -36,6 +36,20 @@ export async function getUserById(userId: string): Promise<IUser | null> {
   }
 }
 
+export async function getUserSettings(userId: string): Promise<IUser | null> {
+  try {
+    await connectDB();
+    const user = await User.findOne({ clerkId: userId });
+    if (!user) throw new Error("User not found");
+
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+}
+
+
 export async function getUserByUsername(username: string) {
   try {
     await connectDB();

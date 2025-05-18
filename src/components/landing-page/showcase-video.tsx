@@ -71,7 +71,7 @@ export function ShowcaseVideo() {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/ZK-rNEhJIDs"
+              src="https://www.youtube.com/embed/Iayq08LEsps?si=SNvr9rWXLIhnJoRZ"
               title="Welcome Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               className="rounded-md"

@@ -10,11 +10,11 @@ export function FeatureSection() {
             <div className="relative w-full max-w-2xl aspect-video shadow-lg overflow-hidden">
               <video autoPlay loop muted playsInline className="w-full h-full">
                 <source
-                  src="https://cdn.prod.website-files.com/65c3a67cde56d79febb2fb8c%2F66f2f2ea593903215d3b1cd5_Scrollcapture%202024-09-24%20At%20130259-transcode.mp4"
+                  src="https://res.cloudinary.com/dmgswrlcd/video/upload/q_auto,f_auto/simplegendemo1_azqrke.mp4"
                   type="video/mp4"
                 />
                 <source
-                  src="https://cdn.prod.website-files.com/65c3a67cde56d79febb2fb8c%2F66f2f2ea593903215d3b1cd5_Scrollcapture%202024-09-24%20At%20130259-transcode.webm"
+                  src="https://res.cloudinary.com/dmgswrlcd/video/upload/q_auto,f_auto/simplegendemo1_azqrke.webm"
                   type="video/webm"
                 />
                 Your browser does not support the video tag.

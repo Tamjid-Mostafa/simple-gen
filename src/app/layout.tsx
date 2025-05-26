@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GlobalStateProvider } from "@/context/GlobalStateContext";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           >
             <GlobalStateProvider>
               <main className="">{children}</main>
+              <Toaster richColors/>
             </GlobalStateProvider>
           </ThemeProvider>
         </body>

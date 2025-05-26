@@ -20,7 +20,7 @@ import {
 } from "@/constants/onboarding";
 import { Label } from "@/components/ui/label";
 import { useUserSettings } from "@/hooks/useUserSettings";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export default function AccountPreferences() {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -29,7 +29,6 @@ export default function AccountPreferences() {
     Record<string, string[]>
   >({});
   const { settings, updateSettings } = useUserSettings();
-  const { toast } = useToast();
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   const debouncedUpdate = useCallback(
@@ -37,10 +36,7 @@ export default function AccountPreferences() {
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
       debounceTimer.current = setTimeout(() => {
         updateSettings(data);
-        toast({
-          title: "Preferences updated",
-          description: "Your settings have been saved.",
-        });
+        toast.success("Your settings have been saved.");
       }, 1500);
     },
     [updateSettings, toast]

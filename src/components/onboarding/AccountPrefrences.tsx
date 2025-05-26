@@ -1,4 +1,3 @@
-// AccountPreferences.tsx
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
@@ -33,17 +32,19 @@ export default function AccountPreferences() {
   const { toast } = useToast();
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const debouncedUpdate = useCallback((data: any) => {
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(() => {
-      updateSettings(data);
-      toast({
-        title: "Preferences updated",
-        description: "Your settings have been saved.",
-      });
-    }, 1500);
-  }, [updateSettings, toast]);
-  
+  const debouncedUpdate = useCallback(
+    (data: any) => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+      debounceTimer.current = setTimeout(() => {
+        updateSettings(data);
+        toast({
+          title: "Preferences updated",
+          description: "Your settings have been saved.",
+        });
+      }, 1500);
+    },
+    [updateSettings, toast]
+  );
 
   useEffect(() => {
     if (settings) {
@@ -142,6 +143,7 @@ export default function AccountPreferences() {
                 })}
                 <div className="flex gap-2 items-center pt-4">
                   <Input
+                    aria-label={`Add new ${getStepTitle(stepKey)}`}
                     value={otherValues[stepKey] || ""}
                     onChange={(e) =>
                       setOtherValues((prev) => ({
@@ -149,6 +151,12 @@ export default function AccountPreferences() {
                         [stepKey]: e.target.value,
                       }))
                     }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleOtherAdd(stepKey);
+                      }
+                    }}
                     placeholder="Other (Please Specify)"
                   />
                   <Button
@@ -156,7 +164,7 @@ export default function AccountPreferences() {
                     onClick={() => handleOtherAdd(stepKey)}
                     variant="secondary"
                   >
-                    Add
+                    Add &#9166;
                   </Button>
                 </div>
               </>

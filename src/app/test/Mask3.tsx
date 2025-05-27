@@ -1,0 +1,49 @@
+import React from "react";
+
+const Mask3 = () => {
+  return (
+    <svg
+      width="104"
+      height="156"
+      viewBox="0 0 104 156"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <mask
+        id="mask0_8_679"
+        style={{ maskType: "alpha" }}
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width="104"
+        height="156"
+      >
+        <path
+          d="M0 156H104L100 32.8421C100 32.8421 64.9143 45.3783 33.5 64.5C22 71.5 0 0 0 0V156Z"
+          fill="#D9D9D9"
+        />
+      </mask>
+      <g mask="url(#mask0_8_679)">
+        <path
+          d="M85.6357 80.8487L38.8752 152.962C37.654 154.852 34.7028 153.991 34.7028 151.747V91.9846C34.7028 90.1287 33.1933 88.627 31.3277 88.627H12.2639C10.466 88.627 9.39752 86.6529 10.3643 85.1512L57.1248 13.0379C58.346 11.1482 61.2972 12.0087 61.2972 14.2527V74.0154C61.2972 75.8713 62.8067 77.373 64.6723 77.373H83.7361C85.534 77.373 86.6025 79.3471 85.6357 80.8487Z"
+          fill="url(#paint0_linear_8_679)"
+        />
+      </g>
+      <defs>
+        <linearGradient
+          id="paint0_linear_8_679"
+          x1="10"
+          y1="93.9248"
+          x2="85.019"
+          y2="69.1095"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#00542D" />
+          <stop offset="1" stop-color="#AAFF00" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
+export default Mask3;

@@ -1,9 +1,1 @@
-<svg width="76" height="142" viewBox="0 0 76 142" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path opacity="0.1" d="M47.9199 1.55176C48.6373 0.441617 50.3506 0.967084 50.3506 2.25293V62.0156C50.3507 64.3986 52.2886 66.3191 54.6719 66.3193H73.7363C74.7823 66.3195 75.4013 67.4609 74.8418 68.334L28.0811 140.447L28.0801 140.448C27.3627 141.558 25.6494 141.033 25.6494 139.747V79.9844C25.6493 77.6014 23.7114 75.6809 21.3281 75.6807H2.26367C1.21669 75.6805 0.597838 74.5365 1.16016 73.6631L1.15918 73.6621L47.9189 1.55273L47.9199 1.55176Z" stroke="url(#paint0_linear_14_4)" stroke-width="1.89244"/>
-<defs>
-<linearGradient id="paint0_linear_14_4" x1="2.12132e-06" y1="81.9248" x2="75.019" y2="57.1095" gradientUnits="userSpaceOnUse">
-<stop stop-color="#006838"/>
-<stop offset="1" stop-color="#95CE24"/>
-</linearGradient>
-</defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 77.89 143.89"><defs><style>.cls-1{fill:none;stroke-width:1.89px;opacity:0.1;isolation:isolate;stroke:url(#linear-gradient);}</style><linearGradient id="linear-gradient" x1="0.52" y1="-19.02" x2="77.38" y2="6.4" gradientTransform="matrix(1, 0, 0, -1, 0, 65.64)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#006838"/><stop offset="1" stop-color="#95ce24"/></linearGradient></defs><title>Vector</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cls-1" d="M49.12,1.56a1.36,1.36,0,0,1,2.49.71V62.84A4.39,4.39,0,0,0,56,67.2H75.6a1.32,1.32,0,0,1,1.13,2l-48,73.09h0a1.35,1.35,0,0,1-2.49-.71V81.05a4.4,4.4,0,0,0-4.43-4.36H2.3a1.32,1.32,0,0,1-1.14-2h0l48-73.08Z"/></g></g></svg>

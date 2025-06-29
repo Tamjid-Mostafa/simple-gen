@@ -45,7 +45,7 @@ If customCTA exists, place it inside CTA block before hashtags.
 `;
 
   const result = streamText({
-    model: openai("gpt-4o-mini"),
+    model: openai("gpt-4o"),
     system,
     prompt,
     temperature: 0.8,

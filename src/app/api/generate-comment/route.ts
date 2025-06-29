@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   `;
 
   const result = streamText({
-    model: openai("gpt-4.1-mini"),
+    model: openai("gpt-4o"),
     system,
     prompt,
     temperature: 0.8,

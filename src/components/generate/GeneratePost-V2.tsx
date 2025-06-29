@@ -1,7 +1,7 @@
 // GeneratePostV2.tsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import { useCompletion } from "@ai-sdk/react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -20,15 +20,14 @@ import { toast } from "@/hooks/use-toast";
 import { useUserSettings } from "@/hooks/useUserSettings";
 import { ScrollArea } from "../ui/scroll-area";
 import { motion } from "motion/react";
+import { usePostStore } from "@/store/post-store";
 
 export default function GeneratePostV2() {
+  // Need use /store/user-settings-store.ts later when free
   const { settings } = useUserSettings();
 
-  const [formData, setFormData] = useState({
-    topic: "",
-    characters: "600",
-    customEnding: settings?.cta || "",
-  });
+  const { formData, updateFormField, addPost, post } = usePostStore();
+  console.log(post);
 
   const [copied, setCopied] = useState(false);
   const resultAreaRef = useRef<HTMLDivElement>(null);
@@ -38,18 +37,15 @@ export default function GeneratePostV2() {
     api: "/api/generate-post",
   });
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof typeof formData, value: string) => {
+    updateFormField(field, value);
   };
 
   useEffect(() => {
     if (settings) {
-      setFormData((prev) => ({
-        ...prev,
-        customEnding: settings.cta || prev.customEnding,
-      }));
+      updateFormField("customEnding", settings.cta || formData.customEnding);
     }
-  }, [settings]);
+  }, [settings, formData.customEnding, updateFormField]);
 
   useEffect(() => {
     if (isLoading || completion) {
@@ -70,7 +66,7 @@ export default function GeneratePostV2() {
 
   const handleGeneratePost = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    addPost(null);
     if (!formData.topic.trim()) {
       toast({
         title: "Missing topic",
@@ -105,7 +101,10 @@ export default function GeneratePostV2() {
     `;
 
     try {
-      await complete(prompt);
+      const res = await complete(prompt);
+      if (res) {
+        addPost(res);
+      }
     } catch {
       toast({
         title: "Generation failed",
@@ -254,36 +253,36 @@ export default function GeneratePostV2() {
         </TabsContent>
       </Tabs>
 
-      {(isLoading || completion) && (
-         <Card ref={resultAreaRef} className="border-2 border-muted">
-         <CardHeader>
-           <CardTitle>Your LinkedIn Post</CardTitle>
-         </CardHeader>
-         <CardContent>
-           <ScrollArea className="font-medium whitespace-pre-wrap border rounded p-4 h-[calc(100vh-200px)] transition-all duration-200 ease-in-out">
-             {completion || (isLoading ? "Generating..." : "")}
-           </ScrollArea>
-           <div className="mt-4 flex justify-end">
-             <Button
-               variant="outline"
-               onClick={handleCopy}
-               disabled={!completion || isLoading}
-             >
-               {copied ? (
-                 <>
-                   <CheckCircle className="h-4 w-4" />
-                   Copied!
-                 </>
-               ) : (
-                 <>
-                   <Copy className="h-4 w-4" />
-                   Copy
-                 </>
-               )}
-             </Button>
-           </div>
-         </CardContent>
-       </Card>
+      {(isLoading || completion || post) && (
+        <Card ref={resultAreaRef} className="border-2 border-muted">
+          <CardHeader>
+            <CardTitle>Your LinkedIn Post</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="font-medium whitespace-pre-wrap border rounded p-4 h-[calc(100vh-200px)] transition-all duration-200 ease-in-out">
+              {completion || post || (isLoading ? "Generating..." : "")}
+            </ScrollArea>
+            <div className="mt-4 flex justify-end">
+              <Button
+                variant="outline"
+                onClick={handleCopy}
+                disabled={!completion || isLoading || !post}
+              >
+                {copied ? (
+                  <>
+                    <CheckCircle className="h-4 w-4" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4" />
+                    Copy
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

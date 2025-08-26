@@ -21,13 +21,20 @@ import { useUserSettings } from "@/hooks/useUserSettings";
 import { ScrollArea } from "../ui/scroll-area";
 import { motion } from "motion/react";
 import { usePostStore } from "@/store/post-store";
+import LinkedInCoverGenerator from "./LinkedInCoverGenerator";
+import { UserSettings } from "@/types/user";
+import { updateUser } from "@/lib/actions/user.action";
+import { useUser } from "@clerk/nextjs";
 
 export default function GeneratePostV2() {
   // Need use /store/user-settings-store.ts later when free
-  const { settings } = useUserSettings();
+  const { settings, updateSettings } = useUserSettings();
 
   const { formData, updateFormField, addPost, post } = usePostStore();
-  console.log(post);
+  console.log(settings);
+
+  const { user } = useUser();
+  const [topicsLoading, setTopicsLoading] = useState(false);
 
   const [copied, setCopied] = useState(false);
   const resultAreaRef = useRef<HTMLDivElement>(null);
@@ -120,6 +127,52 @@ export default function GeneratePostV2() {
     setCopied(true);
     toast({ title: "Copied!", description: "Post copied to clipboard" });
   };
+  async function handleGenerateTopics() {
+    if (!settings) {
+      toast({
+        title: "Preferences missing",
+        description: "Please complete onboarding or visit settings.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setTopicsLoading(true);
+
+      // 1. Call OpenAI API to generate topics
+      const res = await fetch("/api/onboard-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(settings),
+      });
+
+      const json = await res.json();
+      const { data }: { data: UserSettings } = json;
+
+      // 2. Save to LocalStorage
+      updateSettings(data);
+
+      // 3. Save to MongoDB via server action
+      await updateUser(user?.id as string, {
+        settings: data,
+      });
+
+      toast({
+        title: "Topics generated",
+        description: "Your topics were updated successfully.",
+      });
+    } catch (error) {
+      console.error("Error generating topics:", error);
+      toast({
+        title: "Failed",
+        description: "Unable to generate topics. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setTopicsLoading(false);
+    }
+  }
 
   const characterOptions = [
     { value: "600", label: "Approx. 600 characters" },
@@ -212,8 +265,20 @@ export default function GeneratePostV2() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button variant="secondary" disabled>
-                    Generate Topic Ideas
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleGenerateTopics}
+                    disabled={topicsLoading}
+                  >
+                    {topicsLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        Generating…
+                      </>
+                    ) : (
+                      "Generate Topic Ideas"
+                    )}
                   </Button>
                 </div>
                 <Select
@@ -259,9 +324,15 @@ export default function GeneratePostV2() {
             <CardTitle>Your LinkedIn Post</CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="font-medium whitespace-pre-wrap border rounded p-4 h-[calc(100vh-200px)] transition-all duration-200 ease-in-out">
+            <ScrollArea className="font-medium whitespace-pre-wrap border rounded p-4 h-[calc(100vh-200px)] mb-5 transition-all duration-200 ease-in-out">
               {completion || post || (isLoading ? "Generating..." : "")}
             </ScrollArea>
+            <LinkedInCoverGenerator
+              topic={formData.topic}
+              content={completion || post || ""}
+              brandHex="#84cc16"
+            />
+
             <div className="mt-4 flex justify-end">
               <Button
                 variant="outline"
